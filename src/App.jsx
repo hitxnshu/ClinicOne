@@ -73,7 +73,13 @@ export default function App() {
     <div className="app-shell">
       {/* ── Sidebar ── */}
       <aside className="sidebar">
-        <div className="sidebar-logo">➕</div>
+        <div className="sidebar-logo-wrap">
+          <div className="sidebar-logo">➕</div>
+          <div className="sidebar-brand">
+            <span className="sidebar-brand-title">ClinicOne</span>
+            <span className="sidebar-brand-subtitle">Care Hub</span>
+          </div>
+        </div>
 
         <nav className="sidebar-nav">
           {NAV_ITEMS.map(item => (
@@ -83,7 +89,8 @@ export default function App() {
               title={item.label}
               onClick={() => setPage(item.id)}
             >
-              {item.icon}
+              <span className="nav-btn-icon" aria-hidden="true">{item.icon}</span>
+              <span className="nav-btn-label">{item.label}</span>
             </button>
           ))}
         </nav>
