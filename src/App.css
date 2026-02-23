@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
   --primary: #6c7ff2;
@@ -118,15 +118,21 @@ body {
 }
 
 .nav-btn-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: rgba(255,255,255,0.14);
-  font-size: 15px;
+  color: currentColor;
   flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.nav-btn-icon svg {
+  width: 17px;
+  height: 17px;
 }
 
 .nav-btn-label {
@@ -151,6 +157,7 @@ body {
 .nav-btn.active .nav-btn-icon {
   background: #fff;
   color: var(--primary);
+  box-shadow: 0 4px 10px rgba(58,79,201,0.22);
 }
 
 .sidebar-logout {
@@ -617,3 +624,4 @@ body {
   .stats-row { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
 }
+
