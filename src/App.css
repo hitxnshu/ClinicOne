@@ -114,6 +114,8 @@ body {
   padding: 10px 12px;
   cursor: pointer;
   color: rgba(255,255,255,0.84);
+  text-decoration: none;
+  font: inherit;
   transition: var(--transition);
 }
 
