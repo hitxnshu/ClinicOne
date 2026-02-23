@@ -7,8 +7,9 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'admin',
-    agreeToTerms: false
+    role: 'patient',
+    agreeToTerms: false,
+    newsletterOptIn: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -51,17 +52,16 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
       return;
     }
 
-    // In a real app, you'd send this to your backend
-    // Show success message
-    alert(`🎉 Account created successfully!\n\nWelcome, ${formData.fullName}!\nYou're now being signed in...`);
-    
-    // Sign the user in
-    onSignUp({
+    // Store the registered user for login validation
+    const userData = {
       fullName: formData.fullName,
       username: formData.username,
       email: formData.email,
-      role: formData.role
-    });
+      password: formData.password,
+      role: formData.role,
+    };
+    onSignUp(userData);
+    onSwitchToSignIn(); // Go back to welcome/login page after signup
   };
 
   return (
@@ -180,7 +180,7 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
               >
                 <option value="admin">Admin</option>
                 <option value="doctor">Doctor</option>
-                <option value="receptionist">Receptionist</option>
+                <option value="patient">Patient</option>
               </select>
             </div>
 
@@ -206,6 +206,15 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
                 {errors.agreeToTerms}
               </div>
             )}
+
+            <label className="login-check" style={{ marginTop: 10, cursor: 'pointer', color: 'var(--text-mid)' }}>
+              <input
+                type="checkbox"
+                checked={formData.newsletterOptIn}
+                onChange={e => setFormData({ ...formData, newsletterOptIn: e.target.checked })}
+              />
+              <span style={{ fontSize: 12 }}>Send me clinic updates and health tips (optional)</span>
+            </label>
 
             <button type="submit" className="login-submit">
               Create Account
