@@ -7,7 +7,7 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'patient',
+    role: 'receptionist',
     agreeToTerms: false,
     newsletterOptIn: false,
   });
@@ -180,7 +180,7 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
               >
                 <option value="admin">Admin</option>
                 <option value="doctor">Doctor</option>
-                <option value="patient">Patient</option>
+                <option value="receptionist">Receptionist</option>
               </select>
             </div>
 

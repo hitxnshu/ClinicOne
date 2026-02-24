@@ -14,7 +14,6 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import AdminPage from './pages/AdminPage';
 import DoctorPage from './pages/DoctorPage';
-import PatientPage from './pages/PatientPage';
 import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
 import Appointments from './pages/Appointments';
@@ -113,7 +112,14 @@ function NavIcon({ name }) {
   }
 }
 
-function AdminLayout({ onLogout }) {
+function getHomePathForRole(role) {
+  if (role === 'admin') return '/admin';
+  if (role === 'doctor') return '/doctor';
+  if (role === 'receptionist') return '/receptionist';
+  return '/';
+}
+
+function AdminLayout({ onLogout, basePath = 'admin' }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -136,7 +142,7 @@ function AdminLayout({ onLogout }) {
           {ADMIN_NAV_ITEMS.map((item) => (
             <NavLink
               key={item.id}
-              to={`/admin/${item.path}`}
+              to={`/${basePath}/${item.path}`}
               className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}
             >
               <span className="nav-btn-icon">
@@ -174,7 +180,7 @@ function RequireRole({ user, role, children }) {
   if (user.role !== role) {
     if (user.role === 'admin') return <Navigate to="/admin" replace />;
     if (user.role === 'doctor') return <Navigate to="/doctor" replace />;
-    if (user.role === 'patient') return <Navigate to="/patient" replace />;
+    if (user.role === 'receptionist') return <Navigate to="/receptionist" replace />;
     return <Navigate to="/" replace />;
   }
   return children;
@@ -185,10 +191,7 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   const goToRoleHome = (role) => {
-    if (role === 'admin') navigate('/admin');
-    else if (role === 'doctor') navigate('/doctor');
-    else if (role === 'patient') navigate('/patient');
-    else navigate('/');
+    navigate(getHomePathForRole(role));
   };
 
   const handleLogin = (userData) => {
@@ -216,7 +219,7 @@ export default function App() {
         path="/"
         element={
           user ? (
-            <Navigate to={user.role === 'admin' ? '/admin' : user.role === 'doctor' ? '/doctor' : '/patient'} replace />
+            <Navigate to={getHomePathForRole(user.role)} replace />
           ) : (
             <Welcome onLogin={handleLogin} onSwitchToSignUp={() => navigate('/signup')} />
           )
@@ -226,7 +229,7 @@ export default function App() {
         path="/signin"
         element={
           user ? (
-            <Navigate to={user.role === 'admin' ? '/admin' : user.role === 'doctor' ? '/doctor' : '/patient'} replace />
+            <Navigate to={getHomePathForRole(user.role)} replace />
           ) : (
             <SignIn onSignIn={handleSignIn} onSwitchToSignUp={() => navigate('/signup')} />
           )
@@ -236,7 +239,7 @@ export default function App() {
         path="/signup"
         element={
           user ? (
-            <Navigate to={user.role === 'admin' ? '/admin' : user.role === 'doctor' ? '/doctor' : '/patient'} replace />
+            <Navigate to={getHomePathForRole(user.role)} replace />
           ) : (
             <SignUp onSignUp={handleSignUp} onSwitchToSignIn={() => navigate('/')} />
           )
@@ -247,12 +250,30 @@ export default function App() {
         path="/admin"
         element={
           <RequireRole user={user} role="admin">
-            <AdminLayout onLogout={handleLogout} />
+            <AdminLayout onLogout={handleLogout} basePath="admin" />
           </RequireRole>
         }
       >
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard userRole="admin" onNavigate={(page) => navigate(`/admin/${page}`)} />} />
+        <Route path="patients" element={<Patients />} />
+        <Route path="appointments" element={<Appointments />} />
+        <Route path="doctors" element={<Doctors />} />
+        <Route path="search" element={<Patients />} />
+        <Route path="records" element={<MedicalRecords />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
+      <Route
+        path="/receptionist"
+        element={
+          <RequireRole user={user} role="receptionist">
+            <AdminLayout onLogout={handleLogout} basePath="receptionist" />
+          </RequireRole>
+        }
+      >
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<Dashboard userRole="receptionist" onNavigate={(page) => navigate(`/receptionist/${page}`)} />} />
         <Route path="patients" element={<Patients />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="doctors" element={<Doctors />} />
@@ -278,20 +299,12 @@ export default function App() {
           </RequireRole>
         }
       />
-      <Route
-        path="/patient"
-        element={
-          <RequireRole user={user} role="patient">
-            <PatientPage user={user} onLogout={() => { handleLogout(); navigate('/'); }} />
-          </RequireRole>
-        }
-      />
 
       <Route
         path="*"
         element={
           <RequireAuth user={user}>
-            <Navigate to={user?.role === 'admin' ? '/admin' : user?.role === 'doctor' ? '/doctor' : '/patient'} replace />
+            <Navigate to={getHomePathForRole(user?.role)} replace />
           </RequireAuth>
         }
       />

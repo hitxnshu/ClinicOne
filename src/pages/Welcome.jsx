@@ -4,7 +4,7 @@ import { validateLogin } from '../utils/userStorage';
 const ROLES = [
   { id: 'admin',   label: 'Admin',   icon: '👩‍💼', desc: 'Full clinic management' },
   { id: 'doctor',  label: 'Doctor',  icon: '👨‍⚕️', desc: 'Patient care & appointments' },
-  { id: 'patient', label: 'Patient', icon: '🧑‍⚕️', desc: 'Book appointments & view records' },
+  { id: 'receptionist', label: 'Receptionist', icon: '🧾', desc: 'Manage front desk and schedules' },
 ];
 
 export default function Welcome({ onLogin, onSwitchToSignUp }) {

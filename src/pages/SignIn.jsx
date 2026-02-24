@@ -17,7 +17,7 @@ export default function SignIn({ onSignIn, onSwitchToSignUp }) {
       username: formData.username,
       role: formData.role,
       fullName: formData.role === 'admin' ? 'Jane Cooper' : 
-                formData.role === 'doctor' ? 'Dr. Smith' : 'Sarah Lee'
+                formData.role === 'doctor' ? 'Dr. Smith' : 'Front Desk'
     });
   };
 
