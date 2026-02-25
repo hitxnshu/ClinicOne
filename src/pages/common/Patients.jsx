@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { addPatient, getPatients, removePatient } from '../utils/patientStorage';
+import { addPatient, getPatients, removePatient } from '../../utils/patientStorage';
 
 const NEW_PATIENT_INITIAL = {
   firstName: '',
