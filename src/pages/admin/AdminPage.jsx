@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import Dashboard from './Dashboard';
-import Patients from './Patients';
-import Appointments from './Appointments';
-import Doctors from './Doctors';
-import MedicalRecords from './MedicalRecords';
-import Reports from './Reports';
-import Settings from './Settings';
+import Dashboard from '../common/Dashboard';
+import Patients from '../common/Patients';
+import Appointments from '../common/Appointments';
+import Doctors from '../common/Doctors';
+import MedicalRecords from '../common/MedicalRecords';
+import Reports from '../common/Reports';
+import Settings from '../common/Settings';
 
 const NAV_ITEMS = [
   { id: 'dashboard',    icon: '🏠', label: 'Dashboard' },

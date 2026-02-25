@@ -9,18 +9,18 @@ import {
 } from 'react-router-dom';
 import './App.css';
 
-import Welcome from './pages/Welcome';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
-import AdminPage from './pages/AdminPage';
-import DoctorPage from './pages/DoctorPage';
-import Dashboard from './pages/Dashboard';
-import Patients from './pages/Patients';
-import Appointments from './pages/Appointments';
-import Doctors from './pages/Doctors';
-import MedicalRecords from './pages/MedicalRecords';
-import Reports from './pages/Reports';
-import Settings from './pages/Settings';
+import Welcome from './pages/common/Welcome';
+import SignIn from './pages/common/SignIn';
+import SignUp from './pages/common/SignUp';
+import AdminPage from './pages/admin/AdminPage';
+import DoctorPage from './pages/doctor/DoctorPage';
+import Dashboard from './pages/common/Dashboard';
+import Patients from './pages/common/Patients';
+import Appointments from './pages/common/Appointments';
+import Doctors from './pages/common/Doctors';
+import MedicalRecords from './pages/common/MedicalRecords';
+import Reports from './pages/common/Reports';
+import Settings from './pages/common/Settings';
 import { saveUser } from './utils/userStorage';
 
 const ADMIN_NAV_ITEMS = [
@@ -258,7 +258,7 @@ export default function App() {
         <Route path="dashboard" element={<Dashboard userRole="admin" onNavigate={(page) => navigate(`/admin/${page}`)} />} />
         <Route path="patients" element={<Patients />} />
         <Route path="appointments" element={<Appointments />} />
-        <Route path="doctors" element={<Doctors />} />
+        <Route path="doctors" element={<Doctors userRole="admin" />} />
         <Route path="search" element={<Patients />} />
         <Route path="records" element={<MedicalRecords />} />
         <Route path="reports" element={<Reports />} />
@@ -276,7 +276,7 @@ export default function App() {
         <Route path="dashboard" element={<Dashboard userRole="receptionist" onNavigate={(page) => navigate(`/receptionist/${page}`)} />} />
         <Route path="patients" element={<Patients />} />
         <Route path="appointments" element={<Appointments />} />
-        <Route path="doctors" element={<Doctors />} />
+        <Route path="doctors" element={<Doctors userRole="receptionist" />} />
         <Route path="search" element={<Patients />} />
         <Route path="records" element={<MedicalRecords />} />
         <Route path="reports" element={<Reports />} />
