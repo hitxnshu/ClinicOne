@@ -131,7 +131,21 @@ function getHomePathForRole(role) {
   return '/';
 }
 
-function AdminLayout({ onLogout, basePath = 'admin' }) {
+function getRoleLabel(role) {
+  if (role === 'admin') return 'Admin';
+  if (role === 'doctor') return 'Doctor';
+  if (role === 'receptionist') return 'Receptionist';
+  return 'User';
+}
+
+function getRoleAvatar(role) {
+  if (role === 'admin') return '👩‍💼';
+  if (role === 'doctor') return '👨‍⚕️';
+  if (role === 'receptionist') return '🧾';
+  return '👤';
+}
+
+function AdminLayout({ onLogout, basePath = 'admin', user }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -178,6 +192,15 @@ function AdminLayout({ onLogout, basePath = 'admin' }) {
       <div className="main-area">
         <header className="topbar">
           <span className="topbar-brand-name">ClinicOne</span>
+          <div className="topbar-right">
+            <div className="topbar-user">
+              <div className="user-avatar">{getRoleAvatar(user?.role)}</div>
+              <div className="user-meta">
+                <div className="user-name">{user?.fullName || user?.username || user?.email || 'User'}</div>
+                <div className="user-role">{getRoleLabel(user?.role)}</div>
+              </div>
+            </div>
+          </div>
         </header>
         <main className="page-content">
           <Outlet />
@@ -267,7 +290,7 @@ export default function App() {
         path="/admin"
         element={
           <RequireRole user={user} role="admin">
-            <AdminLayout onLogout={handleLogout} basePath="admin" />
+            <AdminLayout onLogout={handleLogout} basePath="admin" user={user} />
           </RequireRole>
         }
       >
@@ -286,7 +309,7 @@ export default function App() {
         path="/receptionist"
         element={
           <RequireRole user={user} role="receptionist">
-            <AdminLayout onLogout={handleLogout} basePath="receptionist" />
+            <AdminLayout onLogout={handleLogout} basePath="receptionist" user={user} />
           </RequireRole>
         }
       >
