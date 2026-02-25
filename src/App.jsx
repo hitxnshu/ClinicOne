@@ -16,8 +16,10 @@ import AdminPage from './pages/admin/AdminPage';
 import DoctorPage from './pages/doctor/DoctorPage';
 import Dashboard from './pages/common/Dashboard';
 import Patients from './pages/common/Patients';
+
 import Appointments from './pages/common/Appointments';
 import Doctors from './pages/common/Doctors';
+import Receptionists from './pages/common/Receptionists';
 import MedicalRecords from './pages/common/MedicalRecords';
 import Reports from './pages/common/Reports';
 import Settings from './pages/common/Settings';
@@ -28,6 +30,7 @@ const ADMIN_NAV_ITEMS = [
   { id: 'patients', path: 'patients', icon: 'patients', label: 'Patients' },
   { id: 'appointments', path: 'appointments', icon: 'appointments', label: 'Appointments' },
   { id: 'doctors', path: 'doctors', icon: 'doctors', label: 'Doctors' },
+  { id: 'receptionists', path: 'receptionists', icon: 'receptionists', label: 'Manage Receptionist' },
   { id: 'search', path: 'search', icon: 'search', label: 'Search' },
   { id: 'records', path: 'records', icon: 'records', label: 'Records' },
   { id: 'reports', path: 'reports', icon: 'reports', label: 'Reports' },
@@ -75,6 +78,15 @@ function NavIcon({ name }) {
         <svg {...common}>
           <path d="M12 4v16M4 12h16" />
           <circle cx="12" cy="12" r="9" />
+        </svg>
+      );
+    case 'receptionists':
+      return (
+        <svg {...common}>
+          <circle cx="9" cy="8" r="2.5" />
+          <circle cx="16.5" cy="9.5" r="2" />
+          <path d="M4.5 18c.8-2.4 2.8-4 5.5-4s4.7 1.6 5.5 4" />
+          <path d="M14 18c.5-1.4 1.7-2.4 3.2-2.4 1.3 0 2.4.7 3 1.8" />
         </svg>
       );
     case 'search':
@@ -127,6 +139,11 @@ function AdminLayout({ onLogout, basePath = 'admin' }) {
     navigate('/');
   };
 
+  const navItems =
+    basePath === 'admin'
+      ? ADMIN_NAV_ITEMS
+      : ADMIN_NAV_ITEMS.filter((item) => item.id !== 'receptionists');
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -139,7 +156,7 @@ function AdminLayout({ onLogout, basePath = 'admin' }) {
         </div>
 
         <nav className="sidebar-nav">
-          {ADMIN_NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <NavLink
               key={item.id}
               to={`/${basePath}/${item.path}`}
@@ -259,6 +276,7 @@ export default function App() {
         <Route path="patients" element={<Patients />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="doctors" element={<Doctors userRole="admin" />} />
+        <Route path="receptionists" element={<Receptionists />} />
         <Route path="search" element={<Patients />} />
         <Route path="records" element={<MedicalRecords />} />
         <Route path="reports" element={<Reports />} />
