@@ -415,6 +415,20 @@ body {
 .search-wrap .search-ico { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-light); }
 
 .btn-bar { display: flex; gap: 9px; }
+.patient-filters-panel {
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+}
+.patient-filter-group {
+  min-width: 180px;
+}
 
 .btn {
   padding: 10px 16px; border: none; border-radius: 11px;
@@ -754,5 +768,15 @@ body {
   .patient-hero h1, .patient-hero h2 { font-size: 24px; }
   .patient-speciality-grid { grid-template-columns: repeat(2, 1fr); }
   .patient-doctors-grid { grid-template-columns: 1fr; }
+  .top-bar { flex-direction: column; align-items: stretch; }
+  .btn-bar { flex-wrap: wrap; }
+  .search-wrap { max-width: 100%; }
+  .patient-filters-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .patient-filter-group {
+    min-width: 100%;
+  }
 }
 
