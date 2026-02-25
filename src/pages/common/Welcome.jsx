@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { validateLogin } from '../utils/userStorage';
+import { validateLogin } from '../../utils/userStorage';
 
 const ROLES = [
   { id: 'admin',   label: 'Admin',   icon: '👩‍💼', desc: 'Full clinic management' },

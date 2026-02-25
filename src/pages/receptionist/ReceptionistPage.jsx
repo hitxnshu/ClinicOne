@@ -26,7 +26,7 @@ const ALL_DOCTORS = [
   { id: 'D008', name: 'Dr. David Kim', spec: 'ENT', avatar: '👨‍⚕️', exp: '9 years' },
 ];
 
-export default function PatientPage({ user, onLogout }) {
+export default function ReceptionistPage({ user, onLogout }) {
   const [section, setSection] = useState('home'); // home | doctors | about | contact
   const [showAllDoctors, setShowAllDoctors] = useState(false);
 
