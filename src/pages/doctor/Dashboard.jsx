@@ -16,24 +16,40 @@ export default function DoctorDashboard({ user, onNavigate }) {
   return (
     <div className="dashboard-layout">
       <div className="dashboard-main">
-        <div className="welcome-banner">
-          <div className="welcome-text">
-            <h2>{greeting()}, <span>{user?.fullName || 'Doctor'}</span></h2>
-            <p>Manage your appointments and patient care</p>
+        <div className="admin-hero-card">
+          <div className="admin-hero-content">
+            <p className="admin-hero-eyebrow">Doctor Workspace</p>
+            <h2>
+              {greeting()}, <span>{user?.fullName || 'Doctor'}</span>
+            </h2>
+            <p>Manage your appointments, patient records, and daily schedule in one place.</p>
+            <div className="admin-hero-actions">
+              <button className="btn btn-primary" onClick={() => onNavigate?.('records')}>
+                View Records
+              </button>
+              <button className="btn btn-ghost" onClick={() => onNavigate?.('appointments')}>
+                Open Schedule
+              </button>
+            </div>
           </div>
-          <div className="welcome-illustration">👨‍⚕️</div>
+          <div className="admin-hero-badge-wrap">
+            <div className="admin-hero-badge">
+              <div className="admin-hero-badge-label">Today</div>
+              <div className="admin-hero-badge-value">{new Date().toLocaleDateString()}</div>
+            </div>
+          </div>
         </div>
 
         <div className="stats-row">
           <div className="stat-card">
-            <div className="stat-icon-wrap blue">📅</div>
+            <div className="stat-icon-wrap blue">AP</div>
             <div>
               <div className="stat-label">Today's Appointments</div>
               <div className="stat-value">{TODAY_APTS.length}</div>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon-wrap purple">🩺</div>
+            <div className="stat-icon-wrap purple">PT</div>
             <div>
               <div className="stat-label">Patients This Week</div>
               <div className="stat-value">24</div>
@@ -73,11 +89,11 @@ export default function DoctorDashboard({ user, onNavigate }) {
       <div className="dashboard-side">
         <div className="quick-actions">
           <button className="qa-btn primary" onClick={() => onNavigate?.('records')}>
-            <div className="qa-btn-ico">📋</div>
+            <div className="qa-btn-ico">VR</div>
             View Records
           </button>
           <button className="qa-btn secondary" onClick={() => onNavigate?.('patients')}>
-            <div className="qa-btn-ico">🩺</div>
+            <div className="qa-btn-ico">MP</div>
             My Patients
           </button>
         </div>

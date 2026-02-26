@@ -197,7 +197,12 @@ export default function Dashboard({ userRole, onNavigate }) {
     );
   }
 
-  const doctorName = 'Dr. Smith';
+  const roleName = userRole === 'receptionist' ? 'Receptionist' : 'Doctor';
+  const roleEyebrow = userRole === 'receptionist' ? 'Reception Desk Center' : 'Doctor Workspace';
+  const roleDescription =
+    userRole === 'receptionist'
+      ? 'Coordinate patients, appointments, and front-desk tasks from one command view.'
+      : 'Manage schedules and patient visits from one dashboard.';
 
   return (
     <div className="dashboard-layout">
@@ -205,12 +210,28 @@ export default function Dashboard({ userRole, onNavigate }) {
       <div className="dashboard-main">
 
         {/* Welcome Banner */}
-        <div className="welcome-banner">
-          <div className="welcome-text">
-            <h2>{greeting()}, <span>{doctorName}</span></h2>
-            <p>Welcome back to your clinic</p>
+        <div className="admin-hero-card">
+          <div className="admin-hero-content">
+            <p className="admin-hero-eyebrow">{roleEyebrow}</p>
+            <h2>
+              {greeting()}, <span>{roleName}</span>
+            </h2>
+            <p>{roleDescription}</p>
+            <div className="admin-hero-actions">
+              <button className="btn btn-primary" onClick={() => onNavigate('patients')}>
+                Add Patient
+              </button>
+              <button className="btn btn-ghost" onClick={() => onNavigate('appointments')}>
+                Book Appointment
+              </button>
+            </div>
           </div>
-          <div className="welcome-illustration">👩‍⚕️</div>
+          <div className="admin-hero-badge-wrap">
+            <div className="admin-hero-badge">
+              <div className="admin-hero-badge-label">Today</div>
+              <div className="admin-hero-badge-value">{new Date().toLocaleDateString()}</div>
+            </div>
+          </div>
         </div>
 
         {/* Stats */}
