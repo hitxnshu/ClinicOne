@@ -224,10 +224,23 @@ export default function Patients() {
                     </span>
                   </td>
                   <td>
-                    <div style={{ display: 'flex', gap: 4 }}>
-                      <button className="icon-action-btn" title="View">👁️</button>
-                      <button className="icon-action-btn" title="Edit">✏️</button>
-                      <button className="icon-action-btn" title="Delete" onClick={() => handleDeletePatient(p.id)}>🗑️</button>
+                    <div className="table-actions">
+                      <button className="action-btn action-view" title="View">
+                        <span aria-hidden="true">👁</span>
+                        View
+                      </button>
+                      <button className="action-btn action-edit" title="Edit">
+                        <span aria-hidden="true">✏</span>
+                        Edit
+                      </button>
+                      <button
+                        className="action-btn action-delete"
+                        title="Delete"
+                        onClick={() => handleDeletePatient(p.id)}
+                      >
+                        <span aria-hidden="true">🗑</span>
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>

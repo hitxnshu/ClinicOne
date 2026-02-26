@@ -302,24 +302,27 @@ export default function Doctors({ userRole = 'admin' }) {
             </div>
             <div className="doctor-btns">
               <button
-                className="btn btn-ghost btn-sm"
+                className="action-btn action-view"
                 onClick={() => setSelectedDoctor(doc)}
               >
+                <span aria-hidden="true">👁</span>
                 View
               </button>
               {canManageDoctors && (
                 <button
-                  className="btn btn-primary btn-sm"
+                  className="action-btn action-edit"
                   onClick={() => setEditingDoctor({ ...doc })}
                 >
+                  <span aria-hidden="true">✏</span>
                   Edit
                 </button>
               )}
               {canManageDoctors && (
                 <button
-                  className="btn btn-ghost btn-sm"
+                  className="action-btn action-delete"
                   onClick={() => handleDeleteDoctor(doc.id)}
                 >
+                  <span aria-hidden="true">🗑</span>
                   Delete
                 </button>
               )}

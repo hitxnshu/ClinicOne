@@ -56,9 +56,20 @@ export function MedicalRecords() {
               </div>
             </div>
             <div className="record-foot">
-              <button className="btn btn-ghost btn-sm">👁️ View Full</button>
-              <button className="btn btn-primary btn-sm">✏️ Edit</button>
-              <button className="btn btn-ghost btn-sm">⬇️ PDF</button>
+              <div className="table-actions">
+                <button className="action-btn action-view">
+                  <span aria-hidden="true">👁</span>
+                  View
+                </button>
+                <button className="action-btn action-edit">
+                  <span aria-hidden="true">✏</span>
+                  Edit
+                </button>
+                <button className="action-btn action-neutral">
+                  <span aria-hidden="true">⬇</span>
+                  PDF
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -89,7 +100,12 @@ export function Reports() {
             <div className="report-type-icon">{t.icon}</div>
             <div className="report-type-title" style={{ color: t.color }}>{t.title}</div>
             <div className="report-type-desc">{t.desc}</div>
-            <button className="btn btn-primary btn-sm report-gen-btn">Generate</button>
+            <div className="table-actions" style={{ marginTop: 12, justifyContent: 'center' }}>
+              <button className="action-btn action-neutral report-gen-btn">
+                <span aria-hidden="true">⬇</span>
+                Generate
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -117,9 +133,15 @@ export function Reports() {
                   <td>{r.date}</td>
                   <td>{r.by}</td>
                   <td>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button className="btn btn-ghost btn-sm">View</button>
-                      <button className="btn btn-ghost btn-sm">⬇️ Download</button>
+                    <div className="table-actions">
+                      <button className="action-btn action-view">
+                        <span aria-hidden="true">👁</span>
+                        View
+                      </button>
+                      <button className="action-btn action-neutral">
+                        <span aria-hidden="true">⬇</span>
+                        Download
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -233,3 +255,5 @@ export function Settings() {
     </div>
   );
 }
+
+
