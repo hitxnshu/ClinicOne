@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const APPOINTMENTS = [
   { id: 1, patient: 'David Leal',    avatar: '👨',  doctor: 'Dr. John Carter',   date: '24 Jul 2023', time: '10:00 AM', status: 'pending' },
@@ -16,6 +16,20 @@ const TODAY_LIST = [
 
 export default function Dashboard({ userRole, onNavigate }) {
   const [activeDot, setActiveDot] = useState(1);
+  const [animateAdminWelcome, setAnimateAdminWelcome] = useState(false);
+
+  useEffect(() => {
+    if (userRole !== 'admin') return;
+
+    const shouldAnimate = sessionStorage.getItem('justLoggedInRole') === userRole;
+    if (!shouldAnimate) return;
+
+    setAnimateAdminWelcome(true);
+    sessionStorage.removeItem('justLoggedInRole');
+
+    const timer = setTimeout(() => setAnimateAdminWelcome(false), 3000);
+    return () => clearTimeout(timer);
+  }, [userRole]);
 
   const greeting = () => {
     const h = new Date().getHours();
@@ -36,7 +50,7 @@ export default function Dashboard({ userRole, onNavigate }) {
           <div className="admin-hero-card">
             <div className="admin-hero-content">
               <p className="admin-hero-eyebrow">Clinic Operations Center</p>
-              <h2>
+              <h2 className={animateAdminWelcome ? 'admin-welcome-animate' : ''}>
                 {greeting()}, <span>Admin</span>
               </h2>
               <p>Monitor patients, doctors, and appointments in one command view.</p>

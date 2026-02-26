@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 const TODAY_APTS = [
   { id: 1, patient: 'David Leal', time: '10:00 AM', reason: 'Check-up', status: 'pending' },
   { id: 2, patient: 'Jenny Wilson', time: '11:30 AM', reason: 'Follow-up', status: 'confirmed' },
@@ -13,13 +15,26 @@ function greeting() {
 }
 
 export default function DoctorDashboard({ user, onNavigate }) {
+  const [animateWelcome, setAnimateWelcome] = useState(false);
+
+  useEffect(() => {
+    const shouldAnimate = sessionStorage.getItem('justLoggedInRole') === 'doctor';
+    if (!shouldAnimate) return;
+
+    setAnimateWelcome(true);
+    sessionStorage.removeItem('justLoggedInRole');
+
+    const timer = setTimeout(() => setAnimateWelcome(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="dashboard-layout">
       <div className="dashboard-main">
         <div className="admin-hero-card">
           <div className="admin-hero-content">
             <p className="admin-hero-eyebrow">Doctor Workspace</p>
-            <h2>
+            <h2 className={animateWelcome ? 'admin-welcome-animate' : ''}>
               {greeting()}, <span>{user?.fullName || 'Doctor'}</span>
             </h2>
             <p>Manage your appointments, patient records, and daily schedule in one place.</p>

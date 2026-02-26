@@ -245,11 +245,17 @@ export default function App() {
   };
 
   const handleLogin = (userData) => {
+    if (userData?.role) {
+      sessionStorage.setItem('justLoggedInRole', userData.role);
+    }
     setUser(userData);
     goToRoleHome(userData?.role);
   };
 
   const handleSignIn = (userData) => {
+    if (userData?.role) {
+      sessionStorage.setItem('justLoggedInRole', userData.role);
+    }
     setUser(userData);
     goToRoleHome(userData?.role);
   };

@@ -314,6 +314,10 @@ body {
   letter-spacing: -0.5px;
   margin-bottom: 10px;
 }
+.admin-hero-content h2.admin-welcome-animate {
+  animation: adminWelcomeReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+  will-change: transform, opacity;
+}
 .admin-hero-content h2 span { color: var(--accent-orange); }
 .admin-hero-content p {
   color: var(--text-mid);
@@ -366,6 +370,21 @@ body {
 }
 .admin-kpi-item span { font-size: 12px; color: var(--text-mid); font-weight: 600; }
 .admin-kpi-item strong { font-size: 14px; color: var(--text-dark); font-weight: 800; }
+
+@keyframes adminWelcomeReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  45% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
 /* WELCOME BANNER */
 .welcome-banner {
