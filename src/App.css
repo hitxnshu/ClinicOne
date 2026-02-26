@@ -264,6 +264,109 @@ body {
 .dashboard-main { display: flex; flex-direction: column; gap: 20px; }
 .dashboard-side { display: flex; flex-direction: column; gap: 16px; }
 
+.admin-dashboard-layout .dashboard-main { gap: 18px; }
+.admin-hero-card {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 28px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f6f8ff 0%, #eef2ff 45%, #f8f4ff 100%);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.admin-hero-card::before {
+  content: '';
+  position: absolute;
+  right: -70px;
+  top: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(108,127,242,0.2) 0%, rgba(108,127,242,0) 72%);
+}
+.admin-hero-card::after {
+  content: '';
+  position: absolute;
+  left: 42%;
+  bottom: -86px;
+  width: 280px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(249,161,75,0.16) 0%, rgba(249,161,75,0) 72%);
+}
+.admin-hero-content { position: relative; z-index: 1; max-width: 560px; }
+.admin-hero-eyebrow {
+  color: var(--primary);
+  font-size: 12px;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.admin-hero-content h2 {
+  color: var(--text-dark);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.admin-hero-content h2 span { color: var(--accent-orange); }
+.admin-hero-content p {
+  color: var(--text-mid);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+.admin-hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.admin-hero-badge-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+.admin-hero-badge {
+  min-width: 180px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.admin-hero-badge-label {
+  color: var(--text-light);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.admin-hero-badge-value {
+  color: var(--text-dark);
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+.admin-kpi-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.admin-kpi-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.admin-kpi-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.admin-kpi-item span { font-size: 12px; color: var(--text-mid); font-weight: 600; }
+.admin-kpi-item strong { font-size: 14px; color: var(--text-dark); font-weight: 800; }
+
 /* WELCOME BANNER */
 .welcome-banner {
   background: var(--surface); border-radius: var(--radius-xl);
@@ -723,6 +826,8 @@ body {
   .stats-row { grid-template-columns: 1fr 1fr; }
   .patient-nav { display: none; }
   .patient-footer-grid { grid-template-columns: 1fr; }
+  .admin-hero-card { flex-direction: column; }
+  .admin-hero-badge { width: 100%; }
 }
 @media (max-width: 1100px) {
   .sidebar {
