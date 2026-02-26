@@ -13,16 +13,27 @@ import Welcome from './pages/common/Welcome';
 import SignIn from './pages/common/SignIn';
 import SignUp from './pages/common/SignUp';
 import AdminPage from './pages/admin/AdminPage';
-import DoctorPage from './pages/doctor/DoctorPage';
-import Dashboard from './pages/common/Dashboard';
-import Patients from './pages/common/Patients';
-
-import Appointments from './pages/common/Appointments';
-import Doctors from './pages/common/Doctors';
-import Receptionists from './pages/common/Receptionists';
-import MedicalRecords from './pages/common/MedicalRecords';
-import Reports from './pages/common/Reports';
-import Settings from './pages/common/Settings';
+import DoctorLayout from './pages/doctor/DoctorLayout';
+import DoctorDashboard from './pages/doctor/Dashboard';
+import DoctorPatients from './pages/doctor/Patients';
+import DoctorAppointments from './pages/doctor/Appointments';
+import DoctorMedicalRecords from './pages/doctor/MedicalRecords';
+import DoctorSettings from './pages/doctor/Settings';
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminPatients from './pages/admin/Patients';
+import AdminAppointments from './pages/admin/Appointments';
+import AdminDoctors from './pages/admin/Doctors';
+import AdminReceptionists from './pages/admin/Receptionists';
+import AdminMedicalRecords from './pages/admin/MedicalRecords';
+import AdminReports from './pages/admin/Reports';
+import AdminSettings from './pages/admin/Settings';
+import ReceptionistDashboard from './pages/receptionist/Dashboard';
+import ReceptionistPatients from './pages/receptionist/Patients';
+import ReceptionistAppointments from './pages/receptionist/Appointments';
+import ReceptionistDoctors from './pages/receptionist/Doctors';
+import ReceptionistMedicalRecords from './pages/receptionist/MedicalRecords';
+import ReceptionistReports from './pages/receptionist/Reports';
+import ReceptionistSettings from './pages/receptionist/Settings';
 import { saveUser } from './utils/userStorage';
 
 const ADMIN_NAV_ITEMS = [
@@ -31,7 +42,6 @@ const ADMIN_NAV_ITEMS = [
   { id: 'appointments', path: 'appointments', icon: 'appointments', label: 'Appointments' },
   { id: 'doctors', path: 'doctors', icon: 'doctors', label: 'Doctors' },
   { id: 'receptionists', path: 'receptionists', icon: 'receptionists', label: 'Manage Receptionist' },
-  { id: 'search', path: 'search', icon: 'search', label: 'Search' },
   { id: 'records', path: 'records', icon: 'records', label: 'Records' },
   { id: 'reports', path: 'reports', icon: 'reports', label: 'Reports' },
   { id: 'settings', path: 'settings', icon: 'settings', label: 'Settings' },
@@ -295,15 +305,15 @@ export default function App() {
         }
       >
         <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<Dashboard userRole="admin" onNavigate={(page) => navigate(`/admin/${page}`)} />} />
-        <Route path="patients" element={<Patients />} />
-        <Route path="appointments" element={<Appointments />} />
-        <Route path="doctors" element={<Doctors userRole="admin" />} />
-        <Route path="receptionists" element={<Receptionists />} />
-        <Route path="search" element={<Patients />} />
-        <Route path="records" element={<MedicalRecords />} />
-        <Route path="reports" element={<Reports />} />
-        <Route path="settings" element={<Settings />} />
+        <Route path="dashboard" element={<AdminDashboard userRole="admin" onNavigate={(page) => navigate(`/admin/${page}`)} />} />
+        <Route path="patients" element={<AdminPatients />} />
+        <Route path="appointments" element={<AdminAppointments />} />
+        <Route path="doctors" element={<AdminDoctors userRole="admin" />} />
+        <Route path="receptionists" element={<AdminReceptionists />} />
+        <Route path="search" element={<AdminPatients />} />
+        <Route path="records" element={<AdminMedicalRecords />} />
+        <Route path="reports" element={<AdminReports />} />
+        <Route path="settings" element={<AdminSettings />} />
       </Route>
       <Route
         path="/receptionist"
@@ -314,14 +324,14 @@ export default function App() {
         }
       >
         <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<Dashboard userRole="receptionist" onNavigate={(page) => navigate(`/receptionist/${page}`)} />} />
-        <Route path="patients" element={<Patients />} />
-        <Route path="appointments" element={<Appointments />} />
-        <Route path="doctors" element={<Doctors userRole="receptionist" />} />
-        <Route path="search" element={<Patients />} />
-        <Route path="records" element={<MedicalRecords />} />
-        <Route path="reports" element={<Reports />} />
-        <Route path="settings" element={<Settings />} />
+        <Route path="dashboard" element={<ReceptionistDashboard userRole="receptionist" onNavigate={(page) => navigate(`/receptionist/${page}`)} />} />
+        <Route path="patients" element={<ReceptionistPatients />} />
+        <Route path="appointments" element={<ReceptionistAppointments />} />
+        <Route path="doctors" element={<ReceptionistDoctors userRole="receptionist" />} />
+        <Route path="search" element={<ReceptionistPatients />} />
+        <Route path="records" element={<ReceptionistMedicalRecords />} />
+        <Route path="reports" element={<ReceptionistReports />} />
+        <Route path="settings" element={<ReceptionistSettings />} />
       </Route>
       <Route
         path="/admin-legacy"
@@ -336,10 +346,17 @@ export default function App() {
         path="/doctor"
         element={
           <RequireRole user={user} role="doctor">
-            <DoctorPage user={user} onLogout={() => { handleLogout(); navigate('/'); }} />
+            <DoctorLayout user={user} onLogout={handleLogout} />
           </RequireRole>
         }
-      />
+      >
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<DoctorDashboard user={user} onNavigate={(page) => navigate(`/doctor/${page}`)} />} />
+        <Route path="patients" element={<DoctorPatients />} />
+        <Route path="appointments" element={<DoctorAppointments />} />
+        <Route path="records" element={<DoctorMedicalRecords />} />
+        <Route path="settings" element={<DoctorSettings />} />
+      </Route>
 
       <Route
         path="*"

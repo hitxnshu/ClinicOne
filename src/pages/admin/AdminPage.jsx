@@ -1,18 +1,17 @@
 import { useState } from 'react';
 
-import Dashboard from '../common/Dashboard';
-import Patients from '../common/Patients';
-import Appointments from '../common/Appointments';
-import Doctors from '../common/Doctors';
-import MedicalRecords from '../common/MedicalRecords';
-import Reports from '../common/Reports';
-import Settings from '../common/Settings';
+import Dashboard from '../shared/Dashboard';
+import Patients from '../shared/Patients';
+import Appointments from '../shared/Appointments';
+import Doctors from '../shared/Doctors';
+import MedicalRecords from '../shared/MedicalRecords';
+import Reports from '../shared/Reports';
+import Settings from '../shared/Settings';
 
 const NAV_ITEMS = [
   { id: 'dashboard',    icon: '🏠', label: 'Dashboard' },
   { id: 'patients',     icon: '🩺', label: 'Patients' },
   { id: 'appointments', icon: '📅', label: 'Appointments' },
-  { id: 'search',       icon: '🔍', label: 'Search' },
   { id: 'records',      icon: '📋', label: 'Records' },
   { id: 'reports',      icon: '📊', label: 'Reports' },
   { id: 'settings',     icon: '⚙️', label: 'Settings' },
@@ -22,7 +21,6 @@ const PAGE_COMPONENTS = {
   dashboard:    Dashboard,
   patients:     Patients,
   appointments: Appointments,
-  search:       Patients,
   records:      MedicalRecords,
   reports:      Reports,
   settings:     Settings,
@@ -87,3 +85,4 @@ export default function AdminPage({ user, onLogout }) {
     </div>
   );
 }
+
