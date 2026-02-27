@@ -33,3 +33,27 @@ export function validateLogin(email, password, role) {
   );
   return user ? { ...user, password: undefined } : null;
 }
+
+export function updateUserPassword(email, role, currentPassword, newPassword) {
+  const users = getRegisteredUsers();
+  const normalizedEmail = email?.toLowerCase().trim();
+  const index = users.findIndex(
+    (u) => u.email.toLowerCase() === normalizedEmail && u.role === role
+  );
+
+  if (index === -1) {
+    return { ok: false, message: 'User account not found.' };
+  }
+
+  if (users[index].password !== currentPassword) {
+    return { ok: false, message: 'Current password is incorrect.' };
+  }
+
+  users[index] = {
+    ...users[index],
+    password: newPassword,
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+  return { ok: true };
+}

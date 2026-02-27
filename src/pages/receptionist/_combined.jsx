@@ -1,5 +1,6 @@
 // MedicalRecords.jsx
 import { useState } from 'react';
+import { updateUserPassword } from '../../utils/userStorage';
 
 const RECORDS = [
   { id: 'R001', patient: 'David Leal',   date: '24 Jul 2023', doctor: 'Dr. John Carter',   diagnosis: 'Hypertension Stage 1',  prescription: 'Lisinopril 10mg daily, reduce salt intake' },
@@ -155,8 +156,14 @@ export function Reports() {
 }
 
 // Settings.jsx
-export function Settings() {
+export function Settings({ user, onPasswordChanged }) {
   const [activeTab, setActiveTab] = useState('clinic');
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [passwordError, setPasswordError] = useState('');
   const workingHours = [
     { day: 'Monday', start: '09:00', end: '17:00', isOpen: true },
     { day: 'Tuesday', start: '09:00', end: '17:00', isOpen: true },
@@ -173,6 +180,39 @@ export function Settings() {
     { id: 'notifs',   icon: '🔔', label: 'Notifications' },
     { id: 'security', icon: '🔒', label: 'Security' },
   ];
+
+  const handlePasswordUpdate = () => {
+    setPasswordError('');
+
+    if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
+      setPasswordError('All password fields are required.');
+      return;
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordError('New password and confirm password must be the same.');
+      return;
+    }
+
+    if (passwordForm.newPassword.length < 6) {
+      setPasswordError('New password must be at least 6 characters.');
+      return;
+    }
+
+    const result = updateUserPassword(
+      user?.email,
+      'receptionist',
+      passwordForm.currentPassword,
+      passwordForm.newPassword
+    );
+
+    if (!result.ok) {
+      setPasswordError(result.message);
+      return;
+    }
+
+    onPasswordChanged?.();
+  };
 
   return (
     <div className="page-wrap">
@@ -256,12 +296,44 @@ export function Settings() {
           {activeTab === 'security' && (
             <>
               <h3 className="settings-section-title">Change Password</h3>
-              <div className="form-group"><label className="form-label">Current Password</label><input className="form-input" type="password" placeholder="••••••••" /></div>
-              <div className="form-row">
-                <div className="form-group"><label className="form-label">New Password</label><input className="form-input" type="password" placeholder="••••••••" /></div>
-                <div className="form-group"><label className="form-label">Confirm New Password</label><input className="form-input" type="password" placeholder="••••••••" /></div>
+              <div className="form-group">
+                <label className="form-label">Current Password</label>
+                <input
+                  className="form-input"
+                  type="password"
+                  placeholder="••••••••"
+                  value={passwordForm.currentPassword}
+                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, currentPassword: e.target.value }))}
+                />
               </div>
-              <button className="btn btn-primary">Update Password</button>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">New Password</label>
+                  <input
+                    className="form-input"
+                    type="password"
+                    placeholder="••••••••"
+                    value={passwordForm.newPassword}
+                    onChange={(e) => setPasswordForm((prev) => ({ ...prev, newPassword: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Confirm New Password</label>
+                  <input
+                    className="form-input"
+                    type="password"
+                    placeholder="••••••••"
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) => setPasswordForm((prev) => ({ ...prev, confirmPassword: e.target.value }))}
+                  />
+                </div>
+              </div>
+              {passwordError && (
+                <div style={{ fontSize: 12, color: 'var(--accent-red)', marginBottom: 8 }}>
+                  {passwordError}
+                </div>
+              )}
+              <button className="btn btn-primary" onClick={handlePasswordUpdate}>Update Password</button>
             </>
           )}
         </div>

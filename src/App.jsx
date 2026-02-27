@@ -337,7 +337,18 @@ export default function App() {
         <Route path="search" element={<ReceptionistPatients />} />
         <Route path="records" element={<ReceptionistMedicalRecords />} />
         <Route path="reports" element={<ReceptionistReports />} />
-        <Route path="settings" element={<ReceptionistSettings />} />
+        <Route
+          path="settings"
+          element={
+            <ReceptionistSettings
+              user={user}
+              onPasswordChanged={() => {
+                handleLogout();
+                navigate('/');
+              }}
+            />
+          }
+        />
       </Route>
       <Route
         path="/admin-legacy"
