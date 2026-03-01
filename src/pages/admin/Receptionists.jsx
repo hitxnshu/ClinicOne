@@ -1,6 +1,6 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 
-const RECEPTIONISTS = [
+const INITIAL_RECEPTIONISTS = [
   {
     id: 'R001',
     name: 'Mia Johnson',
@@ -39,15 +39,76 @@ const RECEPTIONISTS = [
   },
 ];
 
+const NEW_RECEPTIONIST_INITIAL = {
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+  shift: 'Morning',
+};
+
+function getNextReceptionistId(receptionists) {
+  const maxNum = receptionists.reduce((maxId, item) => {
+    const idNum = Number.parseInt(String(item.id || '').replace(/\D/g, ''), 10);
+    return Number.isNaN(idNum) ? maxId : Math.max(maxId, idNum);
+  }, 0);
+  return `R${String(maxNum + 1).padStart(3, '0')}`;
+}
+
+function getInitials(firstName, lastName) {
+  return `${(firstName[0] || '').toUpperCase()}${(lastName[0] || '').toUpperCase()}`;
+}
+
 export default function Receptionists() {
+  const [receptionists, setReceptionists] = useState(INITIAL_RECEPTIONISTS);
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [newReceptionist, setNewReceptionist] = useState(NEW_RECEPTIONIST_INITIAL);
+  const [formError, setFormError] = useState('');
 
-  const filtered = RECEPTIONISTS.filter(
+  const filtered = receptionists.filter(
     (item) =>
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.id.toLowerCase().includes(search.toLowerCase())
   );
+
+  const closeModal = () => {
+    setShowModal(false);
+    setNewReceptionist(NEW_RECEPTIONIST_INITIAL);
+    setFormError('');
+  };
+
+  const handleSaveReceptionist = () => {
+    setFormError('');
+
+    const firstName = newReceptionist.firstName.trim();
+    const lastName = newReceptionist.lastName.trim();
+    const phone = newReceptionist.phone.trim();
+    const email = newReceptionist.email.trim().toLowerCase();
+
+    if (!firstName || !lastName || !phone || !email) {
+      setFormError('Please fill all fields.');
+      return;
+    }
+
+    if (!email.includes('@')) {
+      setFormError('Please enter a valid email.');
+      return;
+    }
+
+    const nextReceptionist = {
+      id: getNextReceptionistId(receptionists),
+      name: `${firstName} ${lastName}`,
+      avatar: getInitials(firstName, lastName),
+      shift: newReceptionist.shift,
+      phone,
+      email,
+      status: 'Active',
+    };
+
+    setReceptionists((prev) => [nextReceptionist, ...prev]);
+    closeModal();
+  };
 
   return (
     <div className="page-wrap">
@@ -132,11 +193,11 @@ export default function Receptionists() {
       </div>
 
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+        <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-head">
               <span className="modal-title">Add New Receptionist</span>
-              <button className="modal-close-btn" onClick={() => setShowModal(false)}>
+              <button className="modal-close-btn" onClick={closeModal}>
                 X
               </button>
             </div>
@@ -144,37 +205,76 @@ export default function Receptionists() {
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">First Name</label>
-                  <input className="form-input" />
+                  <input
+                    className="form-input"
+                    value={newReceptionist.firstName}
+                    onChange={(e) =>
+                      setNewReceptionist((prev) => ({ ...prev, firstName: e.target.value }))
+                    }
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Last Name</label>
-                  <input className="form-input" />
+                  <input
+                    className="form-input"
+                    value={newReceptionist.lastName}
+                    onChange={(e) =>
+                      setNewReceptionist((prev) => ({ ...prev, lastName: e.target.value }))
+                    }
+                  />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Phone</label>
-                  <input className="form-input" type="tel" />
+                  <input
+                    className="form-input"
+                    type="tel"
+                    value={newReceptionist.phone}
+                    onChange={(e) =>
+                      setNewReceptionist((prev) => ({ ...prev, phone: e.target.value }))
+                    }
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Email</label>
-                  <input className="form-input" type="email" />
+                  <input
+                    className="form-input"
+                    type="email"
+                    value={newReceptionist.email}
+                    onChange={(e) =>
+                      setNewReceptionist((prev) => ({ ...prev, email: e.target.value }))
+                    }
+                  />
                 </div>
               </div>
               <div className="form-group">
                 <label className="form-label">Shift</label>
-                <select className="form-select">
+                <select
+                  className="form-select"
+                  value={newReceptionist.shift}
+                  onChange={(e) =>
+                    setNewReceptionist((prev) => ({ ...prev, shift: e.target.value }))
+                  }
+                >
                   <option>Morning</option>
                   <option>Evening</option>
                   <option>Night</option>
                 </select>
               </div>
+              {formError && (
+                <div style={{ fontSize: 12, color: 'var(--accent-red)' }}>
+                  {formError}
+                </div>
+              )}
             </div>
             <div className="modal-foot">
-              <button className="btn btn-ghost" onClick={() => setShowModal(false)}>
+              <button className="btn btn-ghost" onClick={closeModal}>
                 Cancel
               </button>
-              <button className="btn btn-primary">Save Receptionist</button>
+              <button className="btn btn-primary" onClick={handleSaveReceptionist}>
+                Save Receptionist
+              </button>
             </div>
           </div>
         </div>
