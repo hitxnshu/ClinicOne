@@ -231,7 +231,7 @@ export default function Patients() {
           <button className="btn btn-ghost" onClick={() => setShowFilters((prev) => !prev)}>
             🔽 Filter
           </button>
-          <button className="btn btn-primary" onClick={() => setShow(true)}>➕ Add Patient</button>
+          <button className="btn btn-primary" onClick={() => setShow(true)}>➕ Register Patient</button>
         </div>
       </div>
       {showFilters && (
