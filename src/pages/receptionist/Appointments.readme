@@ -1,0 +1,72 @@
+Receptionist Appointments Page Flow
+===================================
+
+File:
+- src/pages/receptionist/Appointments.jsx
+
+Purpose:
+- Let receptionist users book, view, reschedule, and manage appointments.
+- Keep appointment data linked to real patient records and doctor availability.
+
+Core Data Sources:
+- Patients: loaded from patient storage (`getPatients` in `src/utils/patientStorage.js`)
+- Doctors: loaded from localStorage key `clinicone_doctors`
+- Appointments: loaded/saved in localStorage key `clinicone_appointments`
+
+Main Workflow
+-------------
+1) Open appointments page
+- Existing appointments are loaded from localStorage.
+- If none exist, seed appointments are created.
+
+2) Search and filter appointments
+- Search by patient name, doctor name, appointment ID, or phone.
+- Date filter: `All`, `Today`, `Upcoming`, `Past`
+- Status filter: `All`, `Scheduled`, `Completed`, `Cancelled`, `No Show`
+- Doctor filter: filter by doctor ID/name selection.
+
+3) Book a new appointment
+- Click `Book Appointment`.
+- Choose booking mode:
+  - `Existing Patient`: select from current patients.
+  - `+ New Patient`: create patient inline, save to patient storage, then use that patient for booking.
+- Select doctor:
+  - Default doctor list shows only `Available` doctors.
+  - Optional toggle to show unavailable doctors.
+- Select date and time slot.
+- Select appointment type and optional notes.
+- On submit, validations run:
+  - required fields must be filled.
+  - selected doctor must be `Available`.
+  - no conflict for same doctor/date/time.
+  - no conflict for same patient/date/time.
+- Successful booking is saved with status `Scheduled`.
+
+4) Manage existing appointments
+- `View`: opens a read-only details modal.
+- `Reschedule`: opens edit modal for patient/doctor/date/slot/type/status/notes.
+- `Cancel`: sets status to `Cancelled`.
+- `Complete`: sets status to `Completed` (shown for scheduled appointments).
+
+Validation Rules
+----------------
+- New inline patient:
+  - valid first/last name
+  - valid DOB
+  - phone required
+  - email must include `@`
+- Appointment:
+  - patient, doctor, date, time required
+  - doctor status must allow scheduling
+  - conflict prevention against existing non-cancelled appointments
+
+Status Mapping in UI
+--------------------
+- `Completed` -> green (`confirmed`)
+- `Cancelled` -> red (`cancelled`)
+- other statuses (`Scheduled`, `No Show`) -> amber (`pending`)
+
+Notes
+-----
+- This page is receptionist-focused and uses localStorage persistence.
+- It is independent of backend APIs in the current implementation.

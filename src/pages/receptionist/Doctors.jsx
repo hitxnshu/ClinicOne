@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const STORAGE_KEY = 'clinicone_doctors';
 
@@ -119,6 +119,16 @@ const EMPTY_NEW_DOCTOR = {
   license: '',
 };
 
+const AVAILABILITY_FILTERS = {
+  all: 'all',
+  available: 'available',
+  unavailable: 'unavailable',
+};
+
+function isDoctorAvailable(status) {
+  return status === 'Available';
+}
+
 export default function Doctors({ userRole = 'admin' }) {
   const [showModal, setShow] = useState(false);
   const [search, setSearch] = useState('');
@@ -126,18 +136,45 @@ export default function Doctors({ userRole = 'admin' }) {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [editingDoctor, setEditingDoctor] = useState(null);
   const [newDoctor, setNewDoctor] = useState(EMPTY_NEW_DOCTOR);
+  const [availabilityFilter, setAvailabilityFilter] = useState(AVAILABILITY_FILTERS.all);
 
   const canManageDoctors = userRole === 'admin';
+  const isReceptionistView = userRole === 'receptionist';
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(doctors));
   }, [doctors]);
 
-  const filtered = doctors.filter(
-    (d) =>
-      d.name.toLowerCase().includes(search.toLowerCase()) ||
-      d.spec.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = useMemo(() => {
+    const normalizedSearch = search.toLowerCase();
+
+    return doctors.filter((d) => {
+      const matchesSearch =
+        d.name.toLowerCase().includes(normalizedSearch) ||
+        d.spec.toLowerCase().includes(normalizedSearch);
+
+      if (!matchesSearch) return false;
+
+      if (availabilityFilter === AVAILABILITY_FILTERS.available) {
+        return isDoctorAvailable(d.status);
+      }
+
+      if (availabilityFilter === AVAILABILITY_FILTERS.unavailable) {
+        return !isDoctorAvailable(d.status);
+      }
+
+      return true;
+    });
+  }, [availabilityFilter, doctors, search]);
+
+  const availabilityCounts = useMemo(() => {
+    const available = doctors.filter((d) => isDoctorAvailable(d.status)).length;
+    return {
+      total: doctors.length,
+      available,
+      unavailable: doctors.length - available,
+    };
+  }, [doctors]);
 
   const statusColor = (s) =>
     s === 'Available' ? 'confirmed' : s === 'Busy' ? 'pending' : 'cancelled';
@@ -270,6 +307,63 @@ export default function Doctors({ userRole = 'admin' }) {
           )}
         </div>
       </div>
+
+      {isReceptionistView && (
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+            marginBottom: 16,
+          }}
+        >
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <span className="status-badge confirmed">
+              Available: {availabilityCounts.available}
+            </span>
+            <span className="status-badge cancelled">
+              Not Available: {availabilityCounts.unavailable}
+            </span>
+            <span className="status-badge pending">
+              Total: {availabilityCounts.total}
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className={`btn ${
+                availabilityFilter === AVAILABILITY_FILTERS.all ? 'btn-primary' : 'btn-ghost'
+              }`}
+              onClick={() => setAvailabilityFilter(AVAILABILITY_FILTERS.all)}
+            >
+              All
+            </button>
+            <button
+              type="button"
+              className={`btn ${
+                availabilityFilter === AVAILABILITY_FILTERS.available ? 'btn-primary' : 'btn-ghost'
+              }`}
+              onClick={() => setAvailabilityFilter(AVAILABILITY_FILTERS.available)}
+            >
+              Available
+            </button>
+            <button
+              type="button"
+              className={`btn ${
+                availabilityFilter === AVAILABILITY_FILTERS.unavailable
+                  ? 'btn-primary'
+                  : 'btn-ghost'
+              }`}
+              onClick={() => setAvailabilityFilter(AVAILABILITY_FILTERS.unavailable)}
+            >
+              Not Available
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="doctor-grid">
         {filtered.map((doc) => (

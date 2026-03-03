@@ -19,6 +19,7 @@ import DoctorPatients from './pages/doctor/Patients';
 import DoctorAppointments from './pages/doctor/Appointments';
 import DoctorMedicalRecords from './pages/doctor/MedicalRecords';
 import DoctorSettings from './pages/doctor/Settings';
+import DoctorProfile from './pages/doctor/Profile';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminPatients from './pages/admin/Patients';
 import AdminAppointments from './pages/admin/Appointments';
@@ -368,11 +369,15 @@ export default function App() {
         }
       >
         <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<DoctorDashboard user={user} onNavigate={(page) => navigate(`/doctor/${page}`)} />} />
+        <Route
+          path="dashboard"
+          element={<DoctorDashboard user={user} onNavigate={(page) => navigate(`/doctor/${page}`)} />}
+        />
         <Route path="patients" element={<DoctorPatients />} />
         <Route path="appointments" element={<DoctorAppointments />} />
         <Route path="records" element={<DoctorMedicalRecords />} />
         <Route path="settings" element={<DoctorSettings />} />
+        <Route path="profile" element={<DoctorProfile />} />
       </Route>
 
       <Route
