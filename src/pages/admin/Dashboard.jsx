@@ -14,7 +14,7 @@ const TODAY_LIST = [
   { name: 'Mark Joe',     avatar: '👦',  doctor: 'Dr. Alex Brown',    status: 'pending' },
 ];
 
-export default function Dashboard({ userRole, onNavigate }) {
+export default function Dashboard({ userRole, onNavigate, user }) {
   const [activeDot, setActiveDot] = useState(1);
   const [animateAdminWelcome, setAnimateAdminWelcome] = useState(false);
 
@@ -43,6 +43,8 @@ export default function Dashboard({ userRole, onNavigate }) {
   const pendingAppointments = APPOINTMENTS.filter((a) => a.status === 'pending').length;
   const completionRate = Math.round((confirmedAppointments / totalAppointments) * 100);
 
+  const displayName = user?.fullName || user?.username || user?.email || 'User';
+
   if (userRole === 'admin') {
     return (
       <div className="dashboard-layout admin-dashboard-layout">
@@ -51,7 +53,7 @@ export default function Dashboard({ userRole, onNavigate }) {
             <div className="admin-hero-content">
               <p className="admin-hero-eyebrow">Clinic Operations Center</p>
               <h2 className={animateAdminWelcome ? 'admin-welcome-animate' : ''}>
-                {greeting()}, <span>Admin</span>
+                {greeting()}, <span>{displayName}</span>
               </h2>
               <p>Monitor patients, doctors, and appointments in one command view.</p>
               <div className="admin-hero-actions">
