@@ -19,13 +19,7 @@ export default function Dashboard({ userRole, onNavigate, user }) {
   const [animateAdminWelcome, setAnimateAdminWelcome] = useState(false);
 
   useEffect(() => {
-    if (userRole !== 'admin') return;
-
-    const shouldAnimate = sessionStorage.getItem('justLoggedInRole') === userRole;
-    if (!shouldAnimate) return;
-
     setAnimateAdminWelcome(true);
-    sessionStorage.removeItem('justLoggedInRole');
 
     const timer = setTimeout(() => setAnimateAdminWelcome(false), 3000);
     return () => clearTimeout(timer);
