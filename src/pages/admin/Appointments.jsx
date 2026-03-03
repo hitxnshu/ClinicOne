@@ -39,12 +39,39 @@ function formatTimeToDisplay(timeStr) {
   return `${String(hours12).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${period}`;
 }
 
+function toDateInputValue(displayDate) {
+  if (!displayDate) return '';
+  const parsed = new Date(displayDate);
+  if (Number.isNaN(parsed.getTime())) return '';
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, '0');
+  const day = String(parsed.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function toTimeInputValue(displayTime) {
+  if (!displayTime) return '';
+  const match = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(displayTime.trim());
+  if (!match) return '';
+  let hours = Number.parseInt(match[1], 10);
+  const minutes = match[2];
+  const period = match[3].toUpperCase();
+
+  if (period === 'AM' && hours === 12) hours = 0;
+  if (period === 'PM' && hours !== 12) hours += 12;
+
+  return `${String(hours).padStart(2, '0')}:${minutes}`;
+}
+
 export default function Appointments() {
   const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS);
   const [showModal, setShow] = useState(false);
   const [search, setSearch] = useState('');
   const [newAppointment, setNewAppointment] = useState(NEW_APPOINTMENT_INITIAL);
   const [formError, setFormError] = useState('');
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [editingAppointment, setEditingAppointment] = useState(null);
+  const [editError, setEditError] = useState('');
 
   const filtered = appointments.filter(
     (a) =>
@@ -83,6 +110,52 @@ export default function Appointments() {
 
     setAppointments((prev) => [appointment, ...prev]);
     closeModal();
+  };
+
+  const handleCancelAppointment = (appointmentId) => {
+    const selected = appointments.find((a) => a.id === appointmentId);
+    if (!selected) return;
+
+    const shouldCancel = window.confirm(
+      `Cancel appointment for ${selected.patient} with ${selected.doctor}?`
+    );
+    if (!shouldCancel) return;
+
+    setAppointments((prev) =>
+      prev.map((a) => (a.id === appointmentId ? { ...a, status: 'cancelled' } : a))
+    );
+  };
+
+  const handleSaveEditAppointment = () => {
+    if (!editingAppointment) return;
+    setEditError('');
+
+    if (
+      !editingAppointment.patient.trim() ||
+      !editingAppointment.doctor.trim() ||
+      !editingAppointment.dateInput ||
+      !editingAppointment.timeInput
+    ) {
+      setEditError('Please fill patient, doctor, date and time.');
+      return;
+    }
+
+    const updates = {
+      patient: editingAppointment.patient.trim(),
+      doctor: editingAppointment.doctor.trim(),
+      type: editingAppointment.type,
+      status: editingAppointment.status,
+      date: formatDateToDisplay(editingAppointment.dateInput),
+      time: formatTimeToDisplay(editingAppointment.timeInput),
+    };
+
+    setAppointments((prev) =>
+      prev.map((a) => (a.id === editingAppointment.id ? { ...a, ...updates } : a))
+    );
+    if (selectedAppointment?.id === editingAppointment.id) {
+      setSelectedAppointment((prev) => (prev ? { ...prev, ...updates } : prev));
+    }
+    setEditingAppointment(null);
   };
 
   return (
@@ -141,17 +214,37 @@ export default function Appointments() {
                 </td>
                 <td>
                   <div className="table-actions">
-                    <button className="action-btn action-view" title="View">
+                    <button
+                      className="action-btn action-view"
+                      title="View"
+                      onClick={() => setSelectedAppointment(a)}
+                    >
                       <span aria-hidden="true">👁</span>
                       View
                     </button>
-                    <button className="action-btn action-edit" title="Edit">
+                    <button
+                      className="action-btn action-edit"
+                      title="Edit"
+                      onClick={() => {
+                        setEditError('');
+                        setEditingAppointment({
+                          ...a,
+                          dateInput: toDateInputValue(a.date),
+                          timeInput: toTimeInputValue(a.time),
+                        });
+                      }}
+                    >
                       <span aria-hidden="true">✏</span>
                       Edit
                     </button>
-                    <button className="action-btn action-delete" title="Cancel">
+                    <button
+                      className="action-btn action-delete"
+                      title="Cancel"
+                      onClick={() => handleCancelAppointment(a.id)}
+                      disabled={a.status === 'cancelled'}
+                    >
                       <span aria-hidden="true">✖</span>
-                      Cancel
+                      {a.status === 'cancelled' ? 'Cancelled' : 'Cancel'}
                     </button>
                   </div>
                 </td>
@@ -260,6 +353,161 @@ export default function Appointments() {
               <button className="btn btn-ghost" onClick={closeModal}>Cancel</button>
               <button className="btn btn-primary" onClick={handleCreateAppointment}>
                 Book Appointment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedAppointment && (
+        <div className="modal-overlay" onClick={() => setSelectedAppointment(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head">
+              <span className="modal-title">Appointment Details</span>
+              <button className="modal-close-btn" onClick={() => setSelectedAppointment(null)}>
+                X
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Patient</label>
+                  <input className="form-input" value={selectedAppointment.patient} readOnly />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Doctor</label>
+                  <input className="form-input" value={selectedAppointment.doctor} readOnly />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Type</label>
+                  <input className="form-input" value={selectedAppointment.type} readOnly />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Status</label>
+                  <input className="form-input" value={selectedAppointment.status} readOnly />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Date</label>
+                  <input className="form-input" value={selectedAppointment.date} readOnly />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Time</label>
+                  <input className="form-input" value={selectedAppointment.time} readOnly />
+                </div>
+              </div>
+            </div>
+            <div className="modal-foot">
+              <button className="btn btn-primary" onClick={() => setSelectedAppointment(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editingAppointment && (
+        <div className="modal-overlay" onClick={() => setEditingAppointment(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head">
+              <span className="modal-title">Edit Appointment</span>
+              <button className="modal-close-btn" onClick={() => setEditingAppointment(null)}>
+                X
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="form-group">
+                <label className="form-label">Patient</label>
+                <input
+                  className="form-input"
+                  value={editingAppointment.patient}
+                  onChange={(e) =>
+                    setEditingAppointment((prev) => ({ ...prev, patient: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Doctor</label>
+                <input
+                  className="form-input"
+                  value={editingAppointment.doctor}
+                  onChange={(e) =>
+                    setEditingAppointment((prev) => ({ ...prev, doctor: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Date</label>
+                  <input
+                    className="form-input"
+                    type="date"
+                    value={editingAppointment.dateInput}
+                    onChange={(e) =>
+                      setEditingAppointment((prev) => ({ ...prev, dateInput: e.target.value }))
+                    }
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Time</label>
+                  <input
+                    className="form-input"
+                    type="time"
+                    value={editingAppointment.timeInput}
+                    onChange={(e) =>
+                      setEditingAppointment((prev) => ({ ...prev, timeInput: e.target.value }))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Type</label>
+                  <select
+                    className="form-select"
+                    value={editingAppointment.type}
+                    onChange={(e) =>
+                      setEditingAppointment((prev) => ({ ...prev, type: e.target.value }))
+                    }
+                  >
+                    <option>General</option>
+                    <option>General Checkup</option>
+                    <option>Follow-up</option>
+                    <option>Consultation</option>
+                    <option>Vaccination</option>
+                    <option>Lab Test</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Status</label>
+                  <select
+                    className="form-select"
+                    value={editingAppointment.status}
+                    onChange={(e) =>
+                      setEditingAppointment((prev) => ({ ...prev, status: e.target.value }))
+                    }
+                  >
+                    <option value="pending">pending</option>
+                    <option value="confirmed">confirmed</option>
+                    <option value="cancelled">cancelled</option>
+                  </select>
+                </div>
+              </div>
+              {editError && (
+                <div style={{ fontSize: 12, color: 'var(--accent-red)' }}>
+                  {editError}
+                </div>
+              )}
+            </div>
+            <div className="modal-foot">
+              <button className="btn btn-ghost" onClick={() => setEditingAppointment(null)}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={handleSaveEditAppointment}>
+                Save Changes
               </button>
             </div>
           </div>
