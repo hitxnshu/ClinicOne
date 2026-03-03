@@ -5,101 +5,174 @@ const STORAGE_KEY = 'clinicone_doctors';
 const INITIAL_DOCTORS = [
   {
     id: 'D001',
-    name: 'Dr. John Carter',
+    name: 'Dr. Ananya Rao',
     avatar: 'DR',
     spec: 'Cardiology',
-    phone: '+1 234 567 8900',
-    email: 'j.carter@clinic.com',
+    phone: '+91 98765 43210',
+    email: 'ananya.rao@clinic.com',
     exp: '12 years',
     status: 'Available',
-    city: 'New York',
-    country: 'USA',
-    address: '145 Madison Ave',
+    city: 'Mumbai',
+    country: 'India',
+    address: '145 Marine Drive',
     qualification: 'MD, Cardiology',
-    license: 'NY-MED-1021',
+    license: 'MH-MCI-1021',
   },
   {
     id: 'D002',
-    name: 'Dr. Emma Green',
+    name: 'Dr. Vikram Singh',
     avatar: 'DR',
     spec: 'Pediatrics',
-    phone: '+1 234 567 8901',
-    email: 'e.green@clinic.com',
+    phone: '+91 98765 43211',
+    email: 'vikram.singh@clinic.com',
     exp: '8 years',
     status: 'Available',
-    city: 'Chicago',
-    country: 'USA',
-    address: '88 River North Rd',
+    city: 'Delhi',
+    country: 'India',
+    address: '88 Connaught Place',
     qualification: 'MD, Pediatrics',
-    license: 'IL-MED-2244',
+    license: 'DL-MCI-2244',
   },
   {
     id: 'D003',
-    name: 'Dr. Sophia Miller',
+    name: 'Dr. Neha Kapoor',
     avatar: 'DR',
     spec: 'Dermatology',
-    phone: '+1 234 567 8902',
-    email: 's.miller@clinic.com',
+    phone: '+91 98765 43212',
+    email: 'neha.kapoor@clinic.com',
     exp: '15 years',
     status: 'Busy',
-    city: 'Austin',
-    country: 'USA',
-    address: '320 South Congress',
+    city: 'Bengaluru',
+    country: 'India',
+    address: '320 MG Road',
     qualification: 'MD, Dermatology',
-    license: 'TX-MED-3487',
+    license: 'KA-MCI-3487',
   },
   {
     id: 'D004',
-    name: 'Dr. Alex Brown',
+    name: 'Dr. Arjun Malhotra',
     avatar: 'DR',
     spec: 'Orthopedics',
-    phone: '+1 234 567 8903',
-    email: 'a.brown@clinic.com',
+    phone: '+91 98765 43213',
+    email: 'arjun.malhotra@clinic.com',
     exp: '20 years',
     status: 'Available',
-    city: 'Seattle',
-    country: 'USA',
-    address: '12 Pine Street',
+    city: 'Pune',
+    country: 'India',
+    address: '12 FC Road',
     qualification: 'MS, Orthopedics',
-    license: 'WA-MED-4110',
+    license: 'MH-MCI-4110',
   },
   {
     id: 'D005',
-    name: 'Dr. Laura Wilson',
+    name: 'Dr. Priyanka Nair',
     avatar: 'DR',
     spec: 'Neurology',
-    phone: '+1 234 567 8904',
-    email: 'l.wilson@clinic.com',
+    phone: '+91 98765 43214',
+    email: 'priyanka.nair@clinic.com',
     exp: '10 years',
     status: 'On Leave',
-    city: 'Boston',
-    country: 'USA',
-    address: '640 Beacon St',
+    city: 'Kochi',
+    country: 'India',
+    address: '640 MG Road',
     qualification: 'MD, Neurology',
-    license: 'MA-MED-5099',
+    license: 'KL-MCI-5099',
   },
   {
     id: 'D006',
-    name: 'Dr. James Lee',
+    name: 'Dr. Rahul Mehta',
     avatar: 'DR',
     spec: 'General',
-    phone: '+1 234 567 8905',
-    email: 'j.lee@clinic.com',
+    phone: '+91 98765 43215',
+    email: 'rahul.mehta@clinic.com',
     exp: '6 years',
     status: 'Available',
-    city: 'San Diego',
-    country: 'USA',
-    address: '77 Harbor Dr',
+    city: 'Ahmedabad',
+    country: 'India',
+    address: '77 SG Highway',
     qualification: 'MBBS, General Medicine',
-    license: 'CA-MED-6120',
+    license: 'GJ-MCI-6120',
   },
 ];
+
+const LEGACY_DOCTOR_MIGRATIONS = {
+  'Dr. John Carter': {
+    name: 'Dr. Ananya Rao',
+    phone: '+91 98765 43210',
+    email: 'ananya.rao@clinic.com',
+    city: 'Mumbai',
+    country: 'India',
+    address: '145 Marine Drive',
+    license: 'MH-MCI-1021',
+  },
+  'Dr. Emma Green': {
+    name: 'Dr. Vikram Singh',
+    phone: '+91 98765 43211',
+    email: 'vikram.singh@clinic.com',
+    city: 'Delhi',
+    country: 'India',
+    address: '88 Connaught Place',
+    license: 'DL-MCI-2244',
+  },
+  'Dr. Sophia Miller': {
+    name: 'Dr. Neha Kapoor',
+    phone: '+91 98765 43212',
+    email: 'neha.kapoor@clinic.com',
+    city: 'Bengaluru',
+    country: 'India',
+    address: '320 MG Road',
+    license: 'KA-MCI-3487',
+  },
+  'Dr. Alex Brown': {
+    name: 'Dr. Arjun Malhotra',
+    phone: '+91 98765 43213',
+    email: 'arjun.malhotra@clinic.com',
+    city: 'Pune',
+    country: 'India',
+    address: '12 FC Road',
+    license: 'MH-MCI-4110',
+  },
+  'Dr. Laura Wilson': {
+    name: 'Dr. Priyanka Nair',
+    phone: '+91 98765 43214',
+    email: 'priyanka.nair@clinic.com',
+    city: 'Kochi',
+    country: 'India',
+    address: '640 MG Road',
+    license: 'KL-MCI-5099',
+  },
+  'Dr. James Lee': {
+    name: 'Dr. Rahul Mehta',
+    phone: '+91 98765 43215',
+    email: 'rahul.mehta@clinic.com',
+    city: 'Ahmedabad',
+    country: 'India',
+    address: '77 SG Highway',
+    license: 'GJ-MCI-6120',
+  },
+};
+
+function migrateLegacyDoctors(doctors) {
+  let didMigrate = false;
+  const migrated = doctors.map((doctor) => {
+    const updates = LEGACY_DOCTOR_MIGRATIONS[doctor?.name];
+    if (!updates) return doctor;
+    didMigrate = true;
+    return { ...doctor, ...updates };
+  });
+  return { migrated, didMigrate };
+}
 
 function loadDoctors() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
-    return Array.isArray(parsed) && parsed.length ? parsed : INITIAL_DOCTORS;
+    if (!Array.isArray(parsed) || !parsed.length) return INITIAL_DOCTORS;
+    const { migrated, didMigrate } = migrateLegacyDoctors(parsed);
+    if (didMigrate) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+    }
+    return migrated;
   } catch {
     return INITIAL_DOCTORS;
   }

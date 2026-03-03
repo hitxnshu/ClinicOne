@@ -306,7 +306,7 @@ export default function Patients() {
                   <label className="form-label">Phone</label>
                   <input
                     className="form-input"
-                    placeholder="+1 234 567 8900"
+                    placeholder="+91 98765 43210"
                     value={newPatient.phone}
                     onChange={(e) => setNewPatient((prev) => ({ ...prev, phone: e.target.value }))}
                   />

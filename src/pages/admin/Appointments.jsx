@@ -1,11 +1,11 @@
 ﻿import { useState } from 'react';
 
 const INITIAL_APPOINTMENTS = [
-  { id: 1, patient: 'David Leal', avatar: '👨', doctor: 'Dr. John Carter', date: '24 Jul 2023', time: '10:00 AM', type: 'General', status: 'pending' },
-  { id: 2, patient: 'Jenny Wilson', avatar: '👩', doctor: 'Dr. Emma Green', date: '24 Jul 2023', time: '11:30 AM', type: 'Follow-up', status: 'pending' },
-  { id: 3, patient: 'Shope Rose', avatar: '🧑', doctor: 'Dr. Sophia Miller', date: '24 Jul 2023', time: '01:00 PM', type: 'Consultation', status: 'confirmed' },
-  { id: 4, patient: 'Mark Joe', avatar: '👦', doctor: 'Dr. Alex Brown', date: '24 Jul 2023', time: '03:00 PM', type: 'Vaccination', status: 'pending' },
-  { id: 5, patient: 'Emily Davis', avatar: '👩', doctor: 'Dr. John Carter', date: '25 Jul 2023', time: '09:30 AM', type: 'Lab Test', status: 'confirmed' },
+  { id: 1, patient: 'Arjun Mehta', avatar: '👨', doctor: 'Dr. Ananya Rao', date: '24 Jul 2023', time: '10:00 AM', type: 'General', status: 'pending' },
+  { id: 2, patient: 'Priya Sharma', avatar: '👩', doctor: 'Dr. Vikram Singh', date: '24 Jul 2023', time: '11:30 AM', type: 'Follow-up', status: 'pending' },
+  { id: 3, patient: 'Neha Verma', avatar: '🧑', doctor: 'Dr. Neha Kapoor', date: '24 Jul 2023', time: '01:00 PM', type: 'Consultation', status: 'confirmed' },
+  { id: 4, patient: 'Rohan Singh', avatar: '👦', doctor: 'Dr. Arjun Malhotra', date: '24 Jul 2023', time: '03:00 PM', type: 'Vaccination', status: 'pending' },
+  { id: 5, patient: 'Kavya Iyer', avatar: '👩', doctor: 'Dr. Ananya Rao', date: '25 Jul 2023', time: '09:30 AM', type: 'Lab Test', status: 'confirmed' },
 ];
 
 const NEW_APPOINTMENT_INITIAL = {

@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 
 const APPOINTMENTS = [
-  { id: 1, patient: 'David Leal',    avatar: '👨',  doctor: 'Dr. John Carter',   date: '24 Jul 2023', time: '10:00 AM', status: 'pending' },
-  { id: 2, patient: 'Jenny Wilson',  avatar: '👩',  doctor: 'Dr. Emma Green',    date: '24 Jul 2023', time: '11:30 AM', status: 'pending' },
-  { id: 3, patient: 'Shope Rose',    avatar: '👩‍🦰', doctor: 'Dr. Sophia Miller', date: '24 Jul 2023', time: '01:00 PM', status: 'confirmed' },
-  { id: 4, patient: 'Mark Joe',      avatar: '👦',  doctor: 'Dr. Alex Brown',    date: '24 Jul 2023', time: '03:00 PM', status: 'pending' },
+  { id: 1, patient: 'Arjun Mehta',   avatar: '👨',  doctor: 'Dr. Ananya Rao',     date: '24 Jul 2023', time: '10:00 AM', status: 'pending' },
+  { id: 2, patient: 'Priya Sharma',  avatar: '👩',  doctor: 'Dr. Vikram Singh',    date: '24 Jul 2023', time: '11:30 AM', status: 'pending' },
+  { id: 3, patient: 'Neha Verma',    avatar: '👩‍🦰', doctor: 'Dr. Neha Kapoor',    date: '24 Jul 2023', time: '01:00 PM', status: 'confirmed' },
+  { id: 4, patient: 'Rohan Singh',   avatar: '👦',  doctor: 'Dr. Arjun Malhotra', date: '24 Jul 2023', time: '03:00 PM', status: 'pending' },
 ];
 
 const TODAY_LIST = [
-  { name: 'David Leal',   avatar: '👨',  doctor: 'Dr. John Carter',   status: 'pending' },
-  { name: 'Jenny Wilson', avatar: '👩',  doctor: 'Dr. Emma Green',    status: 'pending' },
-  { name: 'Shope Rose',   avatar: '👩‍🦰', doctor: 'Dr. Sophia Miller', status: 'confirmed' },
-  { name: 'Mark Joe',     avatar: '👦',  doctor: 'Dr. Alex Brown',    status: 'pending' },
+  { name: 'Arjun Mehta',  avatar: '👨',  doctor: 'Dr. Ananya Rao',     status: 'pending' },
+  { name: 'Priya Sharma', avatar: '👩',  doctor: 'Dr. Vikram Singh',    status: 'pending' },
+  { name: 'Neha Verma',   avatar: '👩‍🦰', doctor: 'Dr. Neha Kapoor',    status: 'confirmed' },
+  { name: 'Rohan Singh',  avatar: '👦',  doctor: 'Dr. Arjun Malhotra', status: 'pending' },
 ];
 
 export default function Dashboard({ userRole, onNavigate, user }) {
@@ -213,7 +213,7 @@ export default function Dashboard({ userRole, onNavigate, user }) {
     );
   }
 
-  const doctorName = 'Dr. Smith';
+  const doctorName = 'Dr. Rajesh Kumar';
 
   return (
     <div className="dashboard-layout">

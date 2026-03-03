@@ -2,10 +2,10 @@
 import { useState } from 'react';
 
 const RECORDS = [
-  { id: 'R001', patient: 'David Leal',   date: '24 Jul 2023', doctor: 'Dr. John Carter',   diagnosis: 'Hypertension Stage 1',  prescription: 'Lisinopril 10mg daily, reduce salt intake' },
-  { id: 'R002', patient: 'Jenny Wilson', date: '24 Jul 2023', doctor: 'Dr. Emma Green',    diagnosis: 'Acute Rhinitis',         prescription: 'Rest, fluids, antihistamines for 5 days' },
-  { id: 'R003', patient: 'Shope Rose',   date: '20 Jul 2023', doctor: 'Dr. Sophia Miller', diagnosis: 'Eczema (mild)',          prescription: 'Hydrocortisone cream 1%, apply twice daily' },
-  { id: 'R004', patient: 'Mark Joe',     date: '18 Jul 2023', doctor: 'Dr. Alex Brown',    diagnosis: 'Knee Osteoarthritis',    prescription: 'Ibuprofen 400mg TID, physiotherapy 3×/week' },
+  { id: 'R001', patient: 'Arjun Mehta',   date: '24 Jul 2023', doctor: 'Dr. Ananya Rao',   diagnosis: 'Hypertension Stage 1',  prescription: 'Lisinopril 10mg daily, reduce salt intake' },
+  { id: 'R002', patient: 'Priya Sharma', date: '24 Jul 2023', doctor: 'Dr. Vikram Singh',    diagnosis: 'Acute Rhinitis',         prescription: 'Rest, fluids, antihistamines for 5 days' },
+  { id: 'R003', patient: 'Neha Verma',   date: '20 Jul 2023', doctor: 'Dr. Neha Kapoor', diagnosis: 'Eczema (mild)',          prescription: 'Hydrocortisone cream 1%, apply twice daily' },
+  { id: 'R004', patient: 'Rohan Singh',     date: '18 Jul 2023', doctor: 'Dr. Arjun Malhotra',    diagnosis: 'Knee Osteoarthritis',    prescription: 'Ibuprofen 400mg TID, physiotherapy 3×/week' },
 ];
 
 export function MedicalRecords() {
@@ -119,9 +119,9 @@ export function Reports() {
             </thead>
             <tbody>
               {[
-                { name: 'Monthly Patient Summary – January 2026', type: 'Patient',      date: '01 Feb 2026', by: 'Jane Cooper' },
-                { name: 'Appointment Statistics – Q4 2025',        type: 'Appointment',  date: '15 Jan 2026', by: 'Jane Cooper' },
-                { name: 'Revenue Report – December 2025',          type: 'Financial',    date: '05 Jan 2026', by: 'Jane Cooper' },
+                { name: 'Monthly Patient Summary – January 2026', type: 'Patient',      date: '01 Feb 2026', by: 'Neha Gupta' },
+                { name: 'Appointment Statistics – Q4 2025',        type: 'Appointment',  date: '15 Jan 2026', by: 'Neha Gupta' },
+                { name: 'Revenue Report – December 2025',          type: 'Financial',    date: '05 Jan 2026', by: 'Neha Gupta' },
               ].map((r, i) => (
                 <tr key={i}>
                   <td style={{ fontWeight: 600 }}>{r.name}</td>
@@ -255,5 +255,3 @@ export function Settings() {
     </div>
   );
 }
-
-
