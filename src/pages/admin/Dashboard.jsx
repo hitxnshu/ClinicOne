@@ -1,31 +1,25 @@
 import { useEffect, useState } from 'react';
 
 const APPOINTMENTS = [
-  { id: 1, patient: 'David Leal',    avatar: '👨',  doctor: 'Dr. John Carter',   date: '24 Jul 2023', time: '10:00 AM', status: 'pending' },
-  { id: 2, patient: 'Jenny Wilson',  avatar: '👩',  doctor: 'Dr. Emma Green',    date: '24 Jul 2023', time: '11:30 AM', status: 'pending' },
-  { id: 3, patient: 'Shope Rose',    avatar: '👩‍🦰', doctor: 'Dr. Sophia Miller', date: '24 Jul 2023', time: '01:00 PM', status: 'confirmed' },
-  { id: 4, patient: 'Mark Joe',      avatar: '👦',  doctor: 'Dr. Alex Brown',    date: '24 Jul 2023', time: '03:00 PM', status: 'pending' },
+  { id: 1, patient: 'Arjun Mehta',   avatar: '👨',  doctor: 'Dr. Ananya Rao',     date: '24 Jul 2023', time: '10:00 AM', status: 'pending' },
+  { id: 2, patient: 'Priya Sharma',  avatar: '👩',  doctor: 'Dr. Vikram Singh',    date: '24 Jul 2023', time: '11:30 AM', status: 'pending' },
+  { id: 3, patient: 'Neha Verma',    avatar: '👩‍🦰', doctor: 'Dr. Neha Kapoor',    date: '24 Jul 2023', time: '01:00 PM', status: 'confirmed' },
+  { id: 4, patient: 'Rohan Singh',   avatar: '👦',  doctor: 'Dr. Arjun Malhotra', date: '24 Jul 2023', time: '03:00 PM', status: 'pending' },
 ];
 
 const TODAY_LIST = [
-  { name: 'David Leal',   avatar: '👨',  doctor: 'Dr. John Carter',   status: 'pending' },
-  { name: 'Jenny Wilson', avatar: '👩',  doctor: 'Dr. Emma Green',    status: 'pending' },
-  { name: 'Shope Rose',   avatar: '👩‍🦰', doctor: 'Dr. Sophia Miller', status: 'confirmed' },
-  { name: 'Mark Joe',     avatar: '👦',  doctor: 'Dr. Alex Brown',    status: 'pending' },
+  { name: 'Arjun Mehta',  avatar: '👨',  doctor: 'Dr. Ananya Rao',     status: 'pending' },
+  { name: 'Priya Sharma', avatar: '👩',  doctor: 'Dr. Vikram Singh',    status: 'pending' },
+  { name: 'Neha Verma',   avatar: '👩‍🦰', doctor: 'Dr. Neha Kapoor',    status: 'confirmed' },
+  { name: 'Rohan Singh',  avatar: '👦',  doctor: 'Dr. Arjun Malhotra', status: 'pending' },
 ];
 
-export default function Dashboard({ userRole, onNavigate }) {
+export default function Dashboard({ userRole, onNavigate, user }) {
   const [activeDot, setActiveDot] = useState(1);
   const [animateAdminWelcome, setAnimateAdminWelcome] = useState(false);
 
   useEffect(() => {
-    if (userRole !== 'admin') return;
-
-    const shouldAnimate = sessionStorage.getItem('justLoggedInRole') === userRole;
-    if (!shouldAnimate) return;
-
     setAnimateAdminWelcome(true);
-    sessionStorage.removeItem('justLoggedInRole');
 
     const timer = setTimeout(() => setAnimateAdminWelcome(false), 3000);
     return () => clearTimeout(timer);
@@ -43,6 +37,8 @@ export default function Dashboard({ userRole, onNavigate }) {
   const pendingAppointments = APPOINTMENTS.filter((a) => a.status === 'pending').length;
   const completionRate = Math.round((confirmedAppointments / totalAppointments) * 100);
 
+  const displayName = user?.fullName || user?.username || user?.email || 'User';
+
   if (userRole === 'admin') {
     return (
       <div className="dashboard-layout admin-dashboard-layout">
@@ -51,7 +47,7 @@ export default function Dashboard({ userRole, onNavigate }) {
             <div className="admin-hero-content">
               <p className="admin-hero-eyebrow">Clinic Operations Center</p>
               <h2 className={animateAdminWelcome ? 'admin-welcome-animate' : ''}>
-                {greeting()}, <span>Admin</span>
+                {greeting()}, <span>{displayName}</span>
               </h2>
               <p>Monitor patients, doctors, and appointments in one command view.</p>
               <div className="admin-hero-actions">
@@ -211,7 +207,7 @@ export default function Dashboard({ userRole, onNavigate }) {
     );
   }
 
-  const doctorName = 'Dr. Smith';
+  const doctorName = 'Dr. Rajesh Kumar';
 
   return (
     <div className="dashboard-layout">

@@ -13,11 +13,7 @@ export default function DoctorDashboard({ user, onNavigate }) {
   const { appointments, updateAppointmentStatus } = useOutletContext();
 
   useEffect(() => {
-    const shouldAnimate = sessionStorage.getItem('justLoggedInRole') === 'doctor';
-    if (!shouldAnimate) return;
-
     setAnimateWelcome(true);
-    sessionStorage.removeItem('justLoggedInRole');
 
     const timer = setTimeout(() => setAnimateWelcome(false), 3000);
     return () => clearTimeout(timer);

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { addPatient, getPatients, removePatient } from '../../utils/patientStorage';
+import { addPatient, getPatients, removePatient, updatePatient } from '../../utils/patientStorage';
 
 const NEW_PATIENT_INITIAL = {
   firstName: '',
@@ -44,6 +44,9 @@ export default function Patients() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [genderFilter, setGenderFilter] = useState('All');
   const [formError, setFormError] = useState('');
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [editingPatient, setEditingPatient] = useState(null);
+  const [editError, setEditError] = useState('');
 
   const filtered = useMemo(() => {
     const searchTerm = search.trim().toLowerCase();
@@ -118,6 +121,61 @@ export default function Patients() {
   const handleDeletePatient = (patientId) => {
     const nextPatients = removePatient(patientId);
     setPatients(nextPatients);
+    if (selectedPatient?.id === patientId) setSelectedPatient(null);
+    if (editingPatient?.id === patientId) setEditingPatient(null);
+  };
+
+  const handleSaveEditPatient = () => {
+    if (!editingPatient) return;
+    setEditError('');
+
+    const name = editingPatient.name?.trim() || '';
+    const age = Number.parseInt(editingPatient.age, 10);
+    const phone = editingPatient.phone?.trim() || '';
+    const email = editingPatient.email?.trim().toLowerCase() || '';
+
+    if (name.length < 2) {
+      setEditError('Please enter a valid full name.');
+      return;
+    }
+
+    if (Number.isNaN(age) || age < 0 || age > 120) {
+      setEditError('Please enter a valid age.');
+      return;
+    }
+
+    if (!phone) {
+      setEditError('Phone is required.');
+      return;
+    }
+
+    if (!email.includes('@')) {
+      setEditError('Please enter a valid email.');
+      return;
+    }
+
+    const updates = {
+      name,
+      age,
+      gender: editingPatient.gender,
+      phone,
+      email,
+      address: editingPatient.address?.trim() || '',
+      status: editingPatient.status,
+      avatar:
+        editingPatient.gender === 'Female'
+          ? '👩'
+          : editingPatient.gender === 'Male'
+            ? '👨'
+            : '🧑',
+    };
+
+    const nextPatients = updatePatient(editingPatient.id, updates);
+    setPatients(nextPatients);
+    if (selectedPatient?.id === editingPatient.id) {
+      setSelectedPatient((prev) => (prev ? { ...prev, ...updates } : prev));
+    }
+    setEditingPatient(null);
   };
 
   return (
@@ -225,11 +283,22 @@ export default function Patients() {
                   </td>
                   <td>
                     <div className="table-actions">
-                      <button className="action-btn action-view" title="View">
+                      <button
+                        className="action-btn action-view"
+                        title="View"
+                        onClick={() => setSelectedPatient(p)}
+                      >
                         <span aria-hidden="true">👁</span>
                         View
                       </button>
-                      <button className="action-btn action-edit" title="Edit">
+                      <button
+                        className="action-btn action-edit"
+                        title="Edit"
+                        onClick={() => {
+                          setEditError('');
+                          setEditingPatient({ ...p });
+                        }}
+                      >
                         <span aria-hidden="true">✏</span>
                         Edit
                       </button>
@@ -306,7 +375,7 @@ export default function Patients() {
                   <label className="form-label">Phone</label>
                   <input
                     className="form-input"
-                    placeholder="+1 234 567 8900"
+                    placeholder="+91 98765 43210"
                     value={newPatient.phone}
                     onChange={(e) => setNewPatient((prev) => ({ ...prev, phone: e.target.value }))}
                   />
@@ -353,6 +422,185 @@ export default function Patients() {
             <div className="modal-foot">
               <button className="btn btn-ghost" onClick={closeModal}>Cancel</button>
               <button className="btn btn-primary" onClick={handleCreatePatient}>Register Patient</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedPatient && (
+        <div className="modal-overlay" onClick={() => setSelectedPatient(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head">
+              <span className="modal-title">Patient Details</span>
+              <button className="modal-close-btn" onClick={() => setSelectedPatient(null)}>
+                X
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Full Name</label>
+                  <input className="form-input" value={selectedPatient.name} readOnly />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Patient ID</label>
+                  <input className="form-input" value={selectedPatient.id} readOnly />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Age</label>
+                  <input className="form-input" value={selectedPatient.age} readOnly />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Gender</label>
+                  <input className="form-input" value={selectedPatient.gender} readOnly />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Phone</label>
+                  <input className="form-input" value={selectedPatient.phone} readOnly />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Email</label>
+                  <input className="form-input" value={selectedPatient.email} readOnly />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Address</label>
+                <textarea className="form-textarea" value={selectedPatient.address || ''} readOnly />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Last Visit</label>
+                  <input className="form-input" value={selectedPatient.lastVisit} readOnly />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Status</label>
+                  <input className="form-input" value={selectedPatient.status} readOnly />
+                </div>
+              </div>
+            </div>
+            <div className="modal-foot">
+              <button className="btn btn-primary" onClick={() => setSelectedPatient(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editingPatient && (
+        <div className="modal-overlay" onClick={() => setEditingPatient(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head">
+              <span className="modal-title">Edit Patient</span>
+              <button className="modal-close-btn" onClick={() => setEditingPatient(null)}>
+                X
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Full Name</label>
+                  <input
+                    className="form-input"
+                    value={editingPatient.name}
+                    onChange={(e) =>
+                      setEditingPatient((prev) => ({ ...prev, name: e.target.value }))
+                    }
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Age</label>
+                  <input
+                    className="form-input"
+                    type="number"
+                    min="0"
+                    max="120"
+                    value={editingPatient.age}
+                    onChange={(e) =>
+                      setEditingPatient((prev) => ({ ...prev, age: e.target.value }))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Gender</label>
+                  <select
+                    className="form-select"
+                    value={editingPatient.gender}
+                    onChange={(e) =>
+                      setEditingPatient((prev) => ({ ...prev, gender: e.target.value }))
+                    }
+                  >
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Status</label>
+                  <select
+                    className="form-select"
+                    value={editingPatient.status}
+                    onChange={(e) =>
+                      setEditingPatient((prev) => ({ ...prev, status: e.target.value }))
+                    }
+                  >
+                    <option>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Phone</label>
+                  <input
+                    className="form-input"
+                    value={editingPatient.phone}
+                    onChange={(e) =>
+                      setEditingPatient((prev) => ({ ...prev, phone: e.target.value }))
+                    }
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Email</label>
+                  <input
+                    className="form-input"
+                    type="email"
+                    value={editingPatient.email}
+                    onChange={(e) =>
+                      setEditingPatient((prev) => ({ ...prev, email: e.target.value }))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Address</label>
+                <textarea
+                  className="form-textarea"
+                  value={editingPatient.address || ''}
+                  onChange={(e) =>
+                    setEditingPatient((prev) => ({ ...prev, address: e.target.value }))
+                  }
+                />
+              </div>
+              {editError && (
+                <div style={{ fontSize: 12, color: 'var(--accent-red)' }}>
+                  {editError}
+                </div>
+              )}
+            </div>
+            <div className="modal-foot">
+              <button className="btn btn-ghost" onClick={() => setEditingPatient(null)}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={handleSaveEditPatient}>
+                Save Changes
+              </button>
             </div>
           </div>
         </div>

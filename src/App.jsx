@@ -314,7 +314,7 @@ export default function App() {
         }
       >
         <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<AdminDashboard userRole="admin" onNavigate={(page) => navigate(`/admin/${page}`)} />} />
+        <Route path="dashboard" element={<AdminDashboard userRole="admin" user={user} onNavigate={(page) => navigate(`/admin/${page}`)} />} />
         <Route path="patients" element={<AdminPatients />} />
         <Route path="appointments" element={<AdminAppointments />} />
         <Route path="doctors" element={<AdminDoctors userRole="admin" />} />

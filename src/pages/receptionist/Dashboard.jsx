@@ -19,11 +19,7 @@ export default function Dashboard({ userRole, onNavigate }) {
   const [animateWelcome, setAnimateWelcome] = useState(false);
 
   useEffect(() => {
-    const shouldAnimate = sessionStorage.getItem('justLoggedInRole') === userRole;
-    if (!shouldAnimate) return;
-
     setAnimateWelcome(true);
-    sessionStorage.removeItem('justLoggedInRole');
 
     const timer = setTimeout(() => setAnimateWelcome(false), 3000);
     return () => clearTimeout(timer);
