@@ -20,6 +20,8 @@ import DoctorAppointments from './pages/doctor/Appointments';
 import DoctorMedicalRecords from './pages/doctor/MedicalRecords';
 import DoctorSettings from './pages/doctor/Settings';
 import DoctorProfile from './pages/doctor/Profile';
+import DoctorSchedule from './pages/doctor/Schedule';
+import DoctorPatientHistory from './pages/doctor/PatientHistory';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminPatients from './pages/admin/Patients';
 import AdminAppointments from './pages/admin/Appointments';
@@ -374,7 +376,9 @@ export default function App() {
           element={<DoctorDashboard user={user} onNavigate={(page) => navigate(`/doctor/${page}`)} />}
         />
         <Route path="patients" element={<DoctorPatients />} />
+        <Route path="patients/:id/history" element={<DoctorPatientHistory />} />
         <Route path="appointments" element={<DoctorAppointments />} />
+        <Route path="schedule" element={<DoctorSchedule />} />
         <Route path="records" element={<DoctorMedicalRecords />} />
         <Route path="settings" element={<DoctorSettings />} />
         <Route path="profile" element={<DoctorProfile />} />

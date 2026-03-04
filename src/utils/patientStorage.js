@@ -50,3 +50,12 @@ export function removePatient(patientId) {
   savePatients(nextPatients);
   return nextPatients;
 }
+
+export function updatePatient(patientId, updates) {
+  const patients = getPatients();
+  const nextPatients = patients.map((p) =>
+    p.id === patientId ? { ...p, ...updates } : p,
+  );
+  savePatients(nextPatients);
+  return nextPatients;
+}

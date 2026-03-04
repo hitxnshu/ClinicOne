@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { addPatient, getPatients, removePatient } from '../../utils/patientStorage';
+import { useNavigate } from 'react-router-dom';
+import { addPatient, getPatients, removePatient, updatePatient } from '../../utils/patientStorage';
 
 const NEW_PATIENT_INITIAL = {
   firstName: '',
@@ -36,6 +37,7 @@ function formatDateToDisplay(date) {
 }
 
 export default function Patients() {
+  const navigate = useNavigate();
   const [patients, setPatients] = useState(() => getPatients());
   const [search, setSearch] = useState('');
   const [showModal, setShow] = useState(false);
@@ -44,6 +46,16 @@ export default function Patients() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [genderFilter, setGenderFilter] = useState('All');
   const [formError, setFormError] = useState('');
+  const [showEditModal, setShowEdit] = useState(false);
+  const [editingPatient, setEditingPatient] = useState(null);
+  const [editFields, setEditFields] = useState({
+    name: '',
+    gender: 'Male',
+    phone: '',
+    email: '',
+    address: '',
+    status: 'Active',
+  });
 
   const filtered = useMemo(() => {
     const searchTerm = search.trim().toLowerCase();
@@ -118,6 +130,34 @@ export default function Patients() {
   const handleDeletePatient = (patientId) => {
     const nextPatients = removePatient(patientId);
     setPatients(nextPatients);
+  };
+
+  const openEditPatient = (p) => {
+    setEditingPatient(p);
+    setEditFields({
+      name: p.name || '',
+      gender: p.gender || 'Male',
+      phone: p.phone || '',
+      email: p.email || '',
+      address: p.address || '',
+      status: p.status || 'Active',
+    });
+    setShowEdit(true);
+  };
+
+  const saveEditPatient = () => {
+    if (!editingPatient) return;
+    const nextPatients = updatePatient(editingPatient.id, {
+      name: editFields.name.trim() || editingPatient.name,
+      gender: editFields.gender,
+      phone: editFields.phone.trim(),
+      email: editFields.email.trim().toLowerCase(),
+      address: editFields.address.trim(),
+      status: editFields.status,
+    });
+    setPatients(nextPatients);
+    setShowEdit(false);
+    setEditingPatient(null);
   };
 
   return (
@@ -208,10 +248,15 @@ export default function Patients() {
               filtered.map(p => (
                 <tr key={p.id}>
                   <td>
-                    <div className="patient-cell">
+                    <button
+                      className="patient-cell"
+                      onClick={() => navigate(`/doctor/patients/${p.id}/history`)}
+                      title="View Medical History"
+                      style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
+                    >
                       <div className="patient-ava" style={{ fontSize: 18 }}>{p.avatar}</div>
-                      <span className="patient-name">{p.name}</span>
-                    </div>
+                      <span className="patient-name" style={{ color: 'var(--primary)', fontWeight: 700 }}>{p.name}</span>
+                    </button>
                   </td>
                   <td style={{ color: 'var(--primary)', fontWeight: 700 }}>{p.id}</td>
                   <td>{p.age}</td>
@@ -225,14 +270,15 @@ export default function Patients() {
                   </td>
                   <td>
                     <div className="table-actions">
-                      <button className="action-btn action-view" title="View">
+                      <button
+                        className="action-btn action-view"
+                        title="View History"
+                        onClick={() => navigate(`/doctor/patients/${p.id}/history`)}
+                      >
                         <span aria-hidden="true">👁</span>
-                        View
+                        History
                       </button>
-                      <button className="action-btn action-edit" title="Edit">
-                        <span aria-hidden="true">✏</span>
-                        Edit
-                      </button>
+                      {/* Edit action removed; editing is done inside History page */}
                       <button
                         className="action-btn action-delete"
                         title="Delete"
@@ -353,6 +399,83 @@ export default function Patients() {
             <div className="modal-foot">
               <button className="btn btn-ghost" onClick={closeModal}>Cancel</button>
               <button className="btn btn-primary" onClick={handleCreatePatient}>Register Patient</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showEditModal && (
+        <div className="modal-overlay" onClick={() => setShowEdit(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-head">
+              <span className="modal-title">Edit Patient</span>
+              <button className="modal-close-btn" onClick={() => setShowEdit(false)}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="form-group">
+                <label className="form-label">Name</label>
+                <input
+                  className="form-input"
+                  value={editFields.name}
+                  onChange={(e) => setEditFields((prev) => ({ ...prev, name: e.target.value }))}
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Gender</label>
+                  <select
+                    className="form-select"
+                    value={editFields.gender}
+                    onChange={(e) => setEditFields((prev) => ({ ...prev, gender: e.target.value }))}
+                  >
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Status</label>
+                  <select
+                    className="form-select"
+                    value={editFields.status}
+                    onChange={(e) => setEditFields((prev) => ({ ...prev, status: e.target.value }))}
+                  >
+                    <option>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Phone</label>
+                  <input
+                    className="form-input"
+                    value={editFields.phone}
+                    onChange={(e) => setEditFields((prev) => ({ ...prev, phone: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Email</label>
+                  <input
+                    className="form-input"
+                    type="email"
+                    value={editFields.email}
+                    onChange={(e) => setEditFields((prev) => ({ ...prev, email: e.target.value }))}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Address</label>
+                <textarea
+                  className="form-textarea"
+                  value={editFields.address}
+                  onChange={(e) => setEditFields((prev) => ({ ...prev, address: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div className="modal-foot">
+              <button className="btn btn-ghost" onClick={() => setShowEdit(false)}>Cancel</button>
+              <button className="btn btn-primary" onClick={saveEditPatient}>Save Changes</button>
             </div>
           </div>
         </div>
