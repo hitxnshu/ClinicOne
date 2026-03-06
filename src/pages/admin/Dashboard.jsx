@@ -99,6 +99,17 @@ export default function Dashboard({ userRole, onNavigate, user }) {
               </button>
             </div>
 
+            {APPOINTMENTS.length === 0 ? (
+              <div
+                className="today-apt-card"
+                style={{ marginTop: 10, border: '1px dashed var(--border)' }}
+              >
+                <div className="section-title" style={{ marginBottom: 6 }}>
+                  No appointments today
+                </div>
+                <p className="page-sub">No patient visits are scheduled right now.</p>
+              </div>
+            ) : (
             <div className="apt-table-wrap">
               <table className="apt-table">
                 <thead>
@@ -145,6 +156,7 @@ export default function Dashboard({ userRole, onNavigate, user }) {
                 ))}
               </div>
             </div>
+            )}
           </div>
         </div>
 
@@ -188,18 +200,34 @@ export default function Dashboard({ userRole, onNavigate, user }) {
               <span className="section-title">Today's Queue</span>
             </div>
             <div className="today-apt-list">
-              {TODAY_LIST.map((a, i) => (
-                <div key={i} className="today-apt-item">
-                  <div className="today-apt-ava">{a.avatar}</div>
-                  <div className="today-apt-info">
-                    <div className="today-apt-name">{a.name}</div>
-                    <div className="today-apt-doc">{a.doctor}</div>
+              {TODAY_LIST.length === 0 ? (
+                <div
+                  style={{
+                    background: 'var(--surface-soft)',
+                    border: '1px dashed var(--border)',
+                    borderRadius: 12,
+                    padding: '12px 14px',
+                  }}
+                >
+                  <div className="section-title" style={{ marginBottom: 6 }}>
+                    Queue is empty
                   </div>
-                  <span className={`status-badge ${a.status}`}>
-                    {a.status.charAt(0).toUpperCase() + a.status.slice(1)}
-                  </span>
+                  <p className="page-sub">No patients are waiting in today&apos;s queue.</p>
                 </div>
-              ))}
+              ) : (
+                TODAY_LIST.map((a, i) => (
+                  <div key={i} className="today-apt-item">
+                    <div className="today-apt-ava">{a.avatar}</div>
+                    <div className="today-apt-info">
+                      <div className="today-apt-name">{a.name}</div>
+                      <div className="today-apt-doc">{a.doctor}</div>
+                    </div>
+                    <span className={`status-badge ${a.status}`}>
+                      {a.status.charAt(0).toUpperCase() + a.status.slice(1)}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

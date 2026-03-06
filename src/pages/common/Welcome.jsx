@@ -1,11 +1,51 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { validateLogin } from '../../utils/userStorage';
 
 const ROLES = [
-  { id: 'admin',   label: 'Admin',   icon: '👩‍💼', desc: 'Full clinic management' },
-  { id: 'doctor',  label: 'Doctor',  icon: '👨‍⚕️', desc: 'Patient care & appointments' },
-  { id: 'receptionist', label: 'Receptionist', icon: '🧾', desc: 'Manage front desk and schedules' },
+  { id: 'admin', label: 'Admin', desc: 'Full clinic management' },
+  { id: 'doctor', label: 'Doctor', desc: 'Patient care and appointments' },
+  { id: 'receptionist', label: 'Receptionist', desc: 'Front desk and scheduling' },
 ];
+
+function RoleIcon({ role }) {
+  const common = {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: '1.8',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': 'true',
+  };
+
+  if (role === 'admin') {
+    return (
+      <svg {...common}>
+        <circle cx="12" cy="8" r="3.2" />
+        <path d="M6 19c1-2.8 3.3-4.4 6-4.4s5 1.6 6 4.4" />
+        <path d="M17 4h3v3M19.5 4.5l-4.1 4.1" />
+      </svg>
+    );
+  }
+
+  if (role === 'doctor') {
+    return (
+      <svg {...common}>
+        <circle cx="12" cy="8" r="3.2" />
+        <path d="M6.2 19c1-2.7 3.2-4.2 5.8-4.2s4.8 1.5 5.8 4.2" />
+        <path d="M18.5 11.5v5M16 14h5" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...common}>
+      <rect x="6.3" y="4.5" width="11.4" height="15" rx="1.8" />
+      <path d="M9 9h6M9 12h6M9 15h4" />
+      <path d="M9 3.5h6" />
+    </svg>
+  );
+}
 
 export default function Welcome({ onLogin, onSwitchToSignUp }) {
   const [formData, setFormData] = useState({
@@ -40,10 +80,10 @@ export default function Welcome({ onLogin, onSwitchToSignUp }) {
       {/* Left panel */}
       <div className="login-panel-left">
         <div className="login-logo-area">
-          <div className="login-logo-icon">➕</div>
+          <div className="login-logo-icon">{'\u271A'}</div>
           <span className="login-logo-name">ClinicOne</span>
         </div>
-        <div className="login-illus">👩‍⚕️</div>
+        <div className="login-illus">{'\u{1F468}\u200D\u2695\uFE0F'}</div>
         <h2 className="login-left-title">Welcome to ClinicOne</h2>
         <p className="login-left-sub">
           Your complete healthcare management system. Sign in to access your dashboard.
@@ -53,7 +93,7 @@ export default function Welcome({ onLogin, onSwitchToSignUp }) {
       {/* Right panel */}
       <div className="login-panel-right">
         <div className="login-form-box">
-          <h1 className="login-form-title">Welcome to ClinicOne 👋</h1>
+          <h1 className="login-form-title">Welcome to ClinicOne</h1>
           <p className="login-form-sub">Select your role and sign in to continue</p>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -67,9 +107,13 @@ export default function Welcome({ onLogin, onSwitchToSignUp }) {
                     type="button"
                     className={`role-option ${formData.role === r.id ? 'selected' : ''}`}
                     onClick={() => setFormData({ ...formData, role: r.id })}
+                    aria-pressed={formData.role === r.id}
                   >
-                    <span className="role-option-icon">{r.icon}</span>
+                    <span className={`role-option-icon role-option-icon-${r.id}`}>
+                      <RoleIcon role={r.id} />
+                    </span>
                     <span className="role-option-label">{r.label}</span>
+                    <span className="role-option-desc">{r.desc}</span>
                   </button>
                 ))}
               </div>
@@ -138,3 +182,4 @@ export default function Welcome({ onLogin, onSwitchToSignUp }) {
     </div>
   );
 }
+

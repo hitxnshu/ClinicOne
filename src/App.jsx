@@ -152,10 +152,10 @@ function getRoleLabel(role) {
 }
 
 function getRoleAvatar(role) {
-  if (role === 'admin') return 'ðŸ‘©â€ðŸ’¼';
-  if (role === 'doctor') return 'ðŸ‘¨â€âš•ï¸';
-  if (role === 'receptionist') return 'ðŸ§¾';
-  return 'ðŸ‘¤';
+  if (role === 'admin') return '\u{1F469}\u200D\u{1F4BC}';
+  if (role === 'doctor') return '\u{1F468}\u200D\u2695\uFE0F';
+  if (role === 'receptionist') return '\u{1F9FE}';
+  return '\u{1F464}';
 }
 
 function AdminLayout({ onLogout, basePath = 'admin', user }) {
@@ -198,7 +198,7 @@ function AdminLayout({ onLogout, basePath = 'admin', user }) {
         </nav>
 
         <button className="sidebar-logout" onClick={handleLogout}>
-          ðŸšª Logout
+          {'\u{1F6AA}'} Logout
         </button>
       </aside>
 

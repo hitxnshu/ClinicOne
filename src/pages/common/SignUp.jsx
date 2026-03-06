@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 
 export default function SignUp({ onSignUp, onSwitchToSignIn }) {
   const [formData, setFormData] = useState({
@@ -69,21 +69,21 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
       {/* Left panel */}
       <div className="login-panel-left">
         <div className="login-logo-area">
-          <div className="login-logo-icon">➕</div>
+          <div className="login-logo-icon">{'\u271A'}</div>
           <span className="login-logo-name">ClinicOne</span>
         </div>
-        <div className="login-illus">🎉</div>
+        <div className="login-illus signup-main-icon">{'\u271A'}</div>
         <h2 className="login-left-title">Join ClinicOne Today</h2>
         <p className="login-left-sub">
-          Start managing your clinic efficiently with our comprehensive healthcare management system.
+          Create your account and start managing your clinic with a cleaner, faster workflow.
         </p>
       </div>
 
       {/* Right panel */}
       <div className="login-panel-right">
         <div className="login-form-box">
-          <h1 className="login-form-title">Create Account 🚀</h1>
-          <p className="login-form-sub">Sign up to start managing your clinic</p>
+          <h1 className="login-form-title">Create Account</h1>
+          <p className="login-form-sub">Set up your account to start managing your clinic</p>
 
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-group" style={{ marginBottom: 0 }}>
@@ -235,3 +235,4 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
     </div>
   );
 }
+
