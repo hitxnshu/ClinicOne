@@ -1,11 +1,13 @@
-﻿import { useState } from 'react';
+﻿import { useEffect, useState } from 'react';
+
+const STORAGE_KEY = 'clinicone_admin_appointments';
 
 const INITIAL_APPOINTMENTS = [
-  { id: 1, patient: 'Arjun Mehta', avatar: '👨', doctor: 'Dr. Ananya Rao', date: '24 Jul 2023', time: '10:00 AM', type: 'General', status: 'pending' },
-  { id: 2, patient: 'Priya Sharma', avatar: '👩', doctor: 'Dr. Vikram Singh', date: '24 Jul 2023', time: '11:30 AM', type: 'Follow-up', status: 'pending' },
-  { id: 3, patient: 'Neha Verma', avatar: '🧑', doctor: 'Dr. Neha Kapoor', date: '24 Jul 2023', time: '01:00 PM', type: 'Consultation', status: 'confirmed' },
-  { id: 4, patient: 'Rohan Singh', avatar: '👦', doctor: 'Dr. Arjun Malhotra', date: '24 Jul 2023', time: '03:00 PM', type: 'Vaccination', status: 'pending' },
-  { id: 5, patient: 'Kavya Iyer', avatar: '👩', doctor: 'Dr. Ananya Rao', date: '25 Jul 2023', time: '09:30 AM', type: 'Lab Test', status: 'confirmed' },
+  { id: 1, patient: 'Arjun Mehta', avatar: '\u{1F9D1}', doctor: 'Dr. Ananya Rao', date: '24 Jul 2023', time: '10:00 AM', type: 'General', status: 'pending' },
+  { id: 2, patient: 'Priya Sharma', avatar: '\u{1F9D1}', doctor: 'Dr. Vikram Singh', date: '24 Jul 2023', time: '11:30 AM', type: 'Follow-up', status: 'pending' },
+  { id: 3, patient: 'Neha Verma', avatar: '\u{1F9D1}', doctor: 'Dr. Neha Kapoor', date: '24 Jul 2023', time: '01:00 PM', type: 'Consultation', status: 'confirmed' },
+  { id: 4, patient: 'Rohan Singh', avatar: '\u{1F9D1}', doctor: 'Dr. Arjun Malhotra', date: '24 Jul 2023', time: '03:00 PM', type: 'Vaccination', status: 'pending' },
+  { id: 5, patient: 'Kavya Iyer', avatar: '\u{1F9D1}', doctor: 'Dr. Ananya Rao', date: '25 Jul 2023', time: '09:30 AM', type: 'Lab Test', status: 'confirmed' },
 ];
 
 const NEW_APPOINTMENT_INITIAL = {
@@ -62,9 +64,19 @@ function toTimeInputValue(displayTime) {
 
   return `${String(hours).padStart(2, '0')}:${minutes}`;
 }
+function loadAppointments() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return INITIAL_APPOINTMENTS;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.length ? parsed : INITIAL_APPOINTMENTS;
+  } catch {
+    return INITIAL_APPOINTMENTS;
+  }
+}
 
 export default function Appointments() {
-  const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS);
+  const [appointments, setAppointments] = useState(loadAppointments);
   const [showModal, setShow] = useState(false);
   const [search, setSearch] = useState('');
   const [newAppointment, setNewAppointment] = useState(NEW_APPOINTMENT_INITIAL);
@@ -72,6 +84,10 @@ export default function Appointments() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [editingAppointment, setEditingAppointment] = useState(null);
   const [editError, setEditError] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
+  }, [appointments]);
 
   const filtered = appointments.filter(
     (a) =>
@@ -100,7 +116,7 @@ export default function Appointments() {
     const appointment = {
       id: nextId,
       patient: newAppointment.patient,
-      avatar: '🧑',
+      avatar: '\u{1F9D1}',
       doctor: newAppointment.doctor,
       date: formatDateToDisplay(newAppointment.date),
       time: formatTimeToDisplay(newAppointment.time),
@@ -167,16 +183,16 @@ export default function Appointments() {
         </div>
         <div className="btn-bar">
           <div className="search-wrap">
-            <span className="search-ico">🔍</span>
+            <span className="search-ico">&#128269;</span>
             <input
               placeholder="Search appointments..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button className="btn btn-ghost">📅 Today</button>
+          <button className="btn btn-ghost">&#128197; Today</button>
           <button className="btn btn-primary" onClick={() => setShow(true)}>
-            ➕ Book Appointment
+            &#10133; Book Appointment
           </button>
         </div>
       </div>
@@ -219,7 +235,7 @@ export default function Appointments() {
                       title="View"
                       onClick={() => setSelectedAppointment(a)}
                     >
-                      <span aria-hidden="true">👁</span>
+                      <span aria-hidden="true">&#128065;</span>
                       View
                     </button>
                     <button
@@ -234,7 +250,7 @@ export default function Appointments() {
                         });
                       }}
                     >
-                      <span aria-hidden="true">✏</span>
+                      <span aria-hidden="true">&#9999;</span>
                       Edit
                     </button>
                     <button
@@ -243,7 +259,7 @@ export default function Appointments() {
                       onClick={() => handleCancelAppointment(a.id)}
                       disabled={a.status === 'cancelled'}
                     >
-                      <span aria-hidden="true">✖</span>
+                      <span aria-hidden="true">&#10006;</span>
                       {a.status === 'cancelled' ? 'Cancelled' : 'Cancel'}
                     </button>
                   </div>
@@ -516,3 +532,7 @@ export default function Appointments() {
     </div>
   );
 }
+
+
+
+

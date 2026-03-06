@@ -1,4 +1,6 @@
-﻿import { useState } from 'react';
+﻿import { useEffect, useState } from 'react';
+
+const STORAGE_KEY = 'clinicone_receptionists';
 
 const INITIAL_RECEPTIONISTS = [
   {
@@ -68,9 +70,19 @@ function getInitialsFromName(name) {
   const last = parts[1] || '';
   return getInitials(first, last || first);
 }
+function loadReceptionists() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return INITIAL_RECEPTIONISTS;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.length ? parsed : INITIAL_RECEPTIONISTS;
+  } catch {
+    return INITIAL_RECEPTIONISTS;
+  }
+}
 
 export default function Receptionists() {
-  const [receptionists, setReceptionists] = useState(INITIAL_RECEPTIONISTS);
+  const [receptionists, setReceptionists] = useState(loadReceptionists);
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [newReceptionist, setNewReceptionist] = useState(NEW_RECEPTIONIST_INITIAL);
@@ -78,6 +90,10 @@ export default function Receptionists() {
   const [selectedReceptionist, setSelectedReceptionist] = useState(null);
   const [editingReceptionist, setEditingReceptionist] = useState(null);
   const [editError, setEditError] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(receptionists));
+  }, [receptionists]);
 
   const filtered = receptionists.filter(
     (item) =>
@@ -175,7 +191,7 @@ export default function Receptionists() {
     <div className="page-wrap">
       <div className="top-bar">
         <div>
-          <h1 className="page-heading">Manage Receptionist</h1>
+          <h1 className="page-heading">Receptionist</h1>
           <p className="page-sub">Manage receptionist profiles and shifts</p>
         </div>
         <div className="btn-bar">
@@ -238,7 +254,7 @@ export default function Receptionists() {
                       title="View"
                       onClick={() => setSelectedReceptionist(item)}
                     >
-                      <span aria-hidden="true">👁</span>
+                      <span aria-hidden="true">&#128065;</span>
                       View
                     </button>
                     <button
@@ -249,7 +265,7 @@ export default function Receptionists() {
                         setEditingReceptionist({ ...item });
                       }}
                     >
-                      <span aria-hidden="true">✏</span>
+                      <span aria-hidden="true">&#9999;</span>
                       Edit
                     </button>
                     <button
@@ -257,7 +273,7 @@ export default function Receptionists() {
                       title="Delete"
                       onClick={() => handleDeleteReceptionist(item.id)}
                     >
-                      <span aria-hidden="true">🗑</span>
+                      <span aria-hidden="true">&#128465;</span>
                       Delete
                     </button>
                   </div>
@@ -498,3 +514,8 @@ export default function Receptionists() {
     </div>
   );
 }
+
+
+
+
+

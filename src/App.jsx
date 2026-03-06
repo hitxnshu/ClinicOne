@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import {
   Navigate,
   NavLink,
@@ -42,7 +42,7 @@ const ADMIN_NAV_ITEMS = [
   { id: 'patients', path: 'patients', icon: 'patients', label: 'Patients' },
   { id: 'appointments', path: 'appointments', icon: 'appointments', label: 'Appointments' },
   { id: 'doctors', path: 'doctors', icon: 'doctors', label: 'Doctors' },
-  { id: 'receptionists', path: 'receptionists', icon: 'receptionists', label: 'Manage Receptionist' },
+  { id: 'receptionists', path: 'receptionists', icon: 'receptionists', label: 'Receptionist' },
   { id: 'records', path: 'records', icon: 'records', label: 'Records' },
   { id: 'reports', path: 'reports', icon: 'reports', label: 'Reports' },
   { id: 'settings', path: 'settings', icon: 'settings', label: 'Settings' },
@@ -150,10 +150,10 @@ function getRoleLabel(role) {
 }
 
 function getRoleAvatar(role) {
-  if (role === 'admin') return '👩‍💼';
-  if (role === 'doctor') return '👨‍⚕️';
-  if (role === 'receptionist') return '🧾';
-  return '👤';
+  if (role === 'admin') return 'ðŸ‘©â€ðŸ’¼';
+  if (role === 'doctor') return 'ðŸ‘¨â€âš•ï¸';
+  if (role === 'receptionist') return 'ðŸ§¾';
+  return 'ðŸ‘¤';
 }
 
 function AdminLayout({ onLogout, basePath = 'admin', user }) {
@@ -196,7 +196,7 @@ function AdminLayout({ onLogout, basePath = 'admin', user }) {
         </nav>
 
         <button className="sidebar-logout" onClick={handleLogout}>
-          🚪 Logout
+          ðŸšª Logout
         </button>
       </aside>
 
@@ -391,3 +391,4 @@ export default function App() {
     </Routes>
   );
 }
+

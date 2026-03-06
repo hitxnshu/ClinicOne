@@ -389,15 +389,8 @@ export function Reports() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [message, setMessage] = useState('');
 
-  const handleGenerate = (type) => {
-    const report = {
-      name: `${type.title} - ${formatDate()}`,
-      type: type.title.replace(' Reports', ''),
-      date: formatDate(),
-      by: 'Admin User',
-    };
-    setRecentReports((current) => [report, ...current]);
-    setMessage(`${type.title} generated.`);
+  const handleGenerate = () => {
+    setMessage('Report generation is intentionally disabled.');
   };
 
   return (
@@ -415,7 +408,7 @@ export function Reports() {
             </div>
             <div className="report-type-desc">{type.desc}</div>
             <div className="table-actions" style={{ marginTop: 12, justifyContent: 'center' }}>
-              <button className="action-btn action-neutral report-gen-btn" onClick={() => handleGenerate(type)}>
+              <button className="action-btn action-neutral report-gen-btn" onClick={handleGenerate} disabled title="Disabled">
                 Generate
               </button>
             </div>
