@@ -3,7 +3,9 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 const DOCTOR_NAV_ITEMS = [
   { id: 'dashboard', path: 'dashboard', icon: '📊', label: 'Dashboard' },
+  { id: 'patients', path: 'patients', icon: '🩺', label: 'Patients' },
   { id: 'appointments', path: 'appointments', icon: '🗓️', label: 'Appointments' },
+  { id: 'schedule', path: 'schedule', icon: '📅', label: 'Schedule' },
   { id: 'profile', path: 'profile', icon: '👤', label: 'Profile' },
 ];
 

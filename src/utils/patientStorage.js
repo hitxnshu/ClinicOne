@@ -113,4 +113,3 @@ export function updatePatient(patientId, updates) {
   return nextPatients;
 }
 
-
