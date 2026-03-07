@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getStatusTone } from '../../utils/statusSystem';
 
 const INITIAL_RECORDS = [
   {
@@ -116,12 +117,6 @@ function formatDate(date = new Date()) {
     month: 'short',
     year: 'numeric',
   });
-}
-
-function getStatusClass(type) {
-  if (type === 'Patient') return 'pending';
-  if (type === 'Appointment') return 'confirmed';
-  return 'cancelled';
 }
 
 export function MedicalRecords() {
@@ -435,7 +430,7 @@ export function Reports() {
                 <tr key={`${report.name}-${index}`}>
                   <td style={{ fontWeight: 600 }}>{report.name}</td>
                   <td>
-                    <span className={`status-badge ${getStatusClass(report.type)}`}>
+                    <span className={`status-badge ${getStatusTone('report', report.type)}`}>
                       {report.type}
                     </span>
                   </td>

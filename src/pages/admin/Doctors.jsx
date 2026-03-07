@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getStatusTone } from '../../utils/statusSystem';
 
 const STORAGE_KEY = 'clinicone_doctors';
 
@@ -212,9 +213,6 @@ export default function Doctors({ userRole = 'admin' }) {
       d.spec.toLowerCase().includes(search.toLowerCase())
   );
 
-  const statusColor = (s) =>
-    s === 'Available' ? 'confirmed' : s === 'Busy' ? 'pending' : 'cancelled';
-
   const closeAddDoctorModal = () => {
     setShow(false);
     setNewDoctor(EMPTY_NEW_DOCTOR);
@@ -351,7 +349,7 @@ export default function Doctors({ userRole = 'admin' }) {
             <div className="doctor-name">{doc.name}</div>
             <div className="doctor-spec">{doc.spec}</div>
             <span
-              className={`status-badge ${statusColor(doc.status)}`}
+              className={`status-badge ${getStatusTone('doctor', doc.status)}`}
               style={{ marginBottom: 14 }}
             >
               {doc.status}

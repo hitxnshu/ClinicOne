@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getStatusLabel, getStatusTone } from '../../utils/statusSystem';
 
 const STORAGE_KEY = 'clinicone_admin_appointments';
 
@@ -224,8 +225,8 @@ export default function Appointments() {
                 <td>{a.date}</td>
                 <td style={{ fontWeight: 600 }}>{a.time}</td>
                 <td>
-                  <span className={`status-badge ${a.status}`}>
-                    {a.status.charAt(0).toUpperCase() + a.status.slice(1)}
+                  <span className={`status-badge ${getStatusTone('appointment', a.status)}`}>
+                    {getStatusLabel('appointment', a.status)}
                   </span>
                 </td>
                 <td>
@@ -532,6 +533,7 @@ export default function Appointments() {
     </div>
   );
 }
+
 
 
 

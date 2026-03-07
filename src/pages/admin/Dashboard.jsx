@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getStatusLabel, getStatusTone } from '../../utils/statusSystem';
 
 const APPOINTMENTS = [
   { id: 1, patient: 'Arjun Mehta',   avatar: '👨',  doctor: 'Dr. Ananya Rao',     date: '24 Jul 2023', time: '10:00 AM', status: 'pending' },
@@ -135,8 +136,8 @@ export default function Dashboard({ userRole, onNavigate, user }) {
                       <td>{apt.date}</td>
                       <td>{apt.time}</td>
                       <td>
-                        <span className={`status-badge ${apt.status}`}>
-                          {apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
+                        <span className={`status-badge ${getStatusTone('appointment', apt.status)}`}>
+                          {getStatusLabel('appointment', apt.status)}
                         </span>
                       </td>
                       <td>
@@ -222,8 +223,8 @@ export default function Dashboard({ userRole, onNavigate, user }) {
                       <div className="today-apt-name">{a.name}</div>
                       <div className="today-apt-doc">{a.doctor}</div>
                     </div>
-                    <span className={`status-badge ${a.status}`}>
-                      {a.status.charAt(0).toUpperCase() + a.status.slice(1)}
+                    <span className={`status-badge ${getStatusTone('appointment', a.status)}`}>
+                      {getStatusLabel('appointment', a.status)}
                     </span>
                   </div>
                 ))
@@ -308,8 +309,8 @@ export default function Dashboard({ userRole, onNavigate, user }) {
                     <td>{apt.date}</td>
                     <td>{apt.time}</td>
                     <td>
-                      <span className={`status-badge ${apt.status}`}>
-                        {apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
+                      <span className={`status-badge ${getStatusTone('appointment', apt.status)}`}>
+                        {getStatusLabel('appointment', apt.status)}
                       </span>
                     </td>
                     <td>
@@ -360,8 +361,8 @@ export default function Dashboard({ userRole, onNavigate, user }) {
                   <div className="today-apt-name">{a.name}</div>
                   <div className="today-apt-doc">{a.doctor}</div>
                 </div>
-                <span className={`status-badge ${a.status}`}>
-                  {a.status.charAt(0).toUpperCase() + a.status.slice(1)}
+                <span className={`status-badge ${getStatusTone('appointment', a.status)}`}>
+                  {getStatusLabel('appointment', a.status)}
                 </span>
               </div>
             ))}
