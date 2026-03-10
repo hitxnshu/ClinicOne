@@ -1,23 +1,39 @@
 import { useEffect, useState } from 'react';
 import { getStatusLabel, getStatusTone } from '../../utils/statusSystem';
+import { getPatients } from '../../utils/patientStorage';
+
+const DOCTOR_STORAGE_KEY = 'clinicone_doctors';
+const DEFAULT_DOCTOR_COUNT = 6;
 
 const APPOINTMENTS = [
-  { id: 1, patient: 'Arjun Mehta',   avatar: '👨',  doctor: 'Dr. Ananya Rao',     date: '24 Jul 2023', time: '10:00 AM', status: 'pending' },
-  { id: 2, patient: 'Priya Sharma',  avatar: '👩',  doctor: 'Dr. Vikram Singh',    date: '24 Jul 2023', time: '11:30 AM', status: 'pending' },
-  { id: 3, patient: 'Neha Verma',    avatar: '👩‍🦰', doctor: 'Dr. Neha Kapoor',    date: '24 Jul 2023', time: '01:00 PM', status: 'confirmed' },
-  { id: 4, patient: 'Rohan Singh',   avatar: '👦',  doctor: 'Dr. Arjun Malhotra', date: '24 Jul 2023', time: '03:00 PM', status: 'pending' },
+  { id: 1, patient: 'Arjun Mehta', avatar: '👨', doctor: 'Dr. Ananya Rao', date: '24 Jul 2023', time: '10:00 AM', status: 'pending' },
+  { id: 2, patient: 'Priya Sharma', avatar: '👩', doctor: 'Dr. Vikram Singh', date: '24 Jul 2023', time: '11:30 AM', status: 'pending' },
+  { id: 3, patient: 'Neha Verma', avatar: '👩‍🦰', doctor: 'Dr. Neha Kapoor', date: '24 Jul 2023', time: '01:00 PM', status: 'confirmed' },
+  { id: 4, patient: 'Rohan Singh', avatar: '👦', doctor: 'Dr. Arjun Malhotra', date: '24 Jul 2023', time: '03:00 PM', status: 'pending' },
 ];
 
 const TODAY_LIST = [
-  { name: 'Arjun Mehta',  avatar: '👨',  doctor: 'Dr. Ananya Rao',     status: 'pending' },
-  { name: 'Priya Sharma', avatar: '👩',  doctor: 'Dr. Vikram Singh',    status: 'pending' },
-  { name: 'Neha Verma',   avatar: '👩‍🦰', doctor: 'Dr. Neha Kapoor',    status: 'confirmed' },
-  { name: 'Rohan Singh',  avatar: '👦',  doctor: 'Dr. Arjun Malhotra', status: 'pending' },
+  { name: 'Arjun Mehta', avatar: '👨', doctor: 'Dr. Ananya Rao', status: 'pending' },
+  { name: 'Priya Sharma', avatar: '👩', doctor: 'Dr. Vikram Singh', status: 'pending' },
+  { name: 'Neha Verma', avatar: '👩‍🦰', doctor: 'Dr. Neha Kapoor', status: 'confirmed' },
+  { name: 'Rohan Singh', avatar: '👦', doctor: 'Dr. Arjun Malhotra', status: 'pending' },
 ];
+
+function getStoredDoctorCount() {
+  try {
+    const raw = localStorage.getItem(DOCTOR_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    return Array.isArray(parsed) ? parsed.length : DEFAULT_DOCTOR_COUNT;
+  } catch {
+    return DEFAULT_DOCTOR_COUNT;
+  }
+}
 
 export default function Dashboard({ userRole, onNavigate, user }) {
   const [activeDot, setActiveDot] = useState(1);
   const [animateAdminWelcome, setAnimateAdminWelcome] = useState(false);
+  const [patientCount, setPatientCount] = useState(() => getPatients().length);
+  const [doctorCount, setDoctorCount] = useState(() => getStoredDoctorCount());
 
   useEffect(() => {
     setAnimateAdminWelcome(true);
@@ -25,6 +41,22 @@ export default function Dashboard({ userRole, onNavigate, user }) {
     const timer = setTimeout(() => setAnimateAdminWelcome(false), 3000);
     return () => clearTimeout(timer);
   }, [userRole]);
+
+  useEffect(() => {
+    const syncCounts = () => {
+      setPatientCount(getPatients().length);
+      setDoctorCount(getStoredDoctorCount());
+    };
+
+    syncCounts();
+    window.addEventListener('focus', syncCounts);
+    window.addEventListener('storage', syncCounts);
+
+    return () => {
+      window.removeEventListener('focus', syncCounts);
+      window.removeEventListener('storage', syncCounts);
+    };
+  }, []);
 
   const greeting = () => {
     const h = new Date().getHours();
@@ -73,14 +105,14 @@ export default function Dashboard({ userRole, onNavigate, user }) {
               <div className="stat-icon-wrap blue">👥</div>
               <div>
                 <div className="stat-label">Total Patients</div>
-                <div className="stat-value">580</div>
+                <div className="stat-value">{patientCount}</div>
               </div>
             </div>
             <div className="stat-card">
               <div className="stat-icon-wrap purple">🩺</div>
               <div>
                 <div className="stat-label">Total Doctors</div>
-                <div className="stat-value">42</div>
+                <div className="stat-value">{doctorCount}</div>
               </div>
             </div>
             <div className="stat-card">
@@ -111,52 +143,52 @@ export default function Dashboard({ userRole, onNavigate, user }) {
                 <p className="page-sub">No patient visits are scheduled right now.</p>
               </div>
             ) : (
-            <div className="apt-table-wrap">
-              <table className="apt-table">
-                <thead>
-                  <tr>
-                    <th>Patient Name</th>
-                    <th>Doctor Name</th>
-                    <th>Date <span className="sort-ico">⇄</span></th>
-                    <th>Time <span className="sort-ico">⇄</span></th>
-                    <th>Status <span className="sort-ico">⇄</span></th>
-                    <th>···</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {APPOINTMENTS.map((apt) => (
-                    <tr key={apt.id}>
-                      <td>
-                        <div className="patient-cell">
-                          <div className="patient-ava">{apt.avatar}</div>
-                          <span className="patient-name">{apt.patient}</span>
-                        </div>
-                      </td>
-                      <td>{apt.doctor}</td>
-                      <td>{apt.date}</td>
-                      <td>{apt.time}</td>
-                      <td>
-                        <span className={`status-badge ${getStatusTone('appointment', apt.status)}`}>
-                          {getStatusLabel('appointment', apt.status)}
-                        </span>
-                      </td>
-                      <td>
-                        <button className="more-btn">···</button>
-                      </td>
+              <div className="apt-table-wrap">
+                <table className="apt-table">
+                  <thead>
+                    <tr>
+                      <th>Patient Name</th>
+                      <th>Doctor Name</th>
+                      <th>Date <span className="sort-ico">⇄</span></th>
+                      <th>Time <span className="sort-ico">⇄</span></th>
+                      <th>Status <span className="sort-ico">⇄</span></th>
+                      <th>···</th>
                     </tr>
+                  </thead>
+                  <tbody>
+                    {APPOINTMENTS.map((apt) => (
+                      <tr key={apt.id}>
+                        <td>
+                          <div className="patient-cell">
+                            <div className="patient-ava">{apt.avatar}</div>
+                            <span className="patient-name">{apt.patient}</span>
+                          </div>
+                        </td>
+                        <td>{apt.doctor}</td>
+                        <td>{apt.date}</td>
+                        <td>{apt.time}</td>
+                        <td>
+                          <span className={`status-badge ${getStatusTone('appointment', apt.status)}`}>
+                            {getStatusLabel('appointment', apt.status)}
+                          </span>
+                        </td>
+                        <td>
+                          <button className="more-btn">···</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="table-pagination">
+                  {[0, 1, 2].map((i) => (
+                    <button
+                      key={i}
+                      className={`dot-page ${activeDot === i ? 'active' : ''}`}
+                      onClick={() => setActiveDot(i)}
+                    />
                   ))}
-                </tbody>
-              </table>
-              <div className="table-pagination">
-                {[0, 1, 2].map((i) => (
-                  <button
-                    key={i}
-                    className={`dot-page ${activeDot === i ? 'active' : ''}`}
-                    onClick={() => setActiveDot(i)}
-                  />
-                ))}
+                </div>
               </div>
-            </div>
             )}
           </div>
         </div>
@@ -240,10 +272,7 @@ export default function Dashboard({ userRole, onNavigate, user }) {
 
   return (
     <div className="dashboard-layout">
-      {/* ── Main Column ── */}
       <div className="dashboard-main">
-
-        {/* Welcome Banner */}
         <div className="welcome-banner">
           <div className="welcome-text">
             <h2>{greeting()}, <span>{doctorName}</span></h2>
@@ -252,32 +281,30 @@ export default function Dashboard({ userRole, onNavigate, user }) {
           <div className="welcome-illustration">👩‍⚕️</div>
         </div>
 
-        {/* Stats */}
         <div className="stats-row">
           <div className="stat-card">
             <div className="stat-icon-wrap blue">🩺</div>
             <div>
               <div className="stat-label">Total Patients</div>
-              <div className="stat-value">580</div>
+              <div className="stat-value">{patientCount}</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon-wrap purple">🩻</div>
             <div>
               <div className="stat-label">Total Doctors</div>
-              <div className="stat-value">42</div>
+              <div className="stat-value">{doctorCount}</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon-wrap orange">📅</div>
             <div>
               <div className="stat-label">Today's Appointments</div>
-              <div className="stat-value">22</div>
+              <div className="stat-value">{totalAppointments}</div>
             </div>
           </div>
         </div>
 
-        {/* Appointments Table */}
         <div>
           <div className="section-header">
             <span className="section-title">Today's Appointments</span>
@@ -297,7 +324,7 @@ export default function Dashboard({ userRole, onNavigate, user }) {
                 </tr>
               </thead>
               <tbody>
-                {APPOINTMENTS.map(apt => (
+                {APPOINTMENTS.map((apt) => (
                   <tr key={apt.id}>
                     <td>
                       <div className="patient-cell">
@@ -321,7 +348,7 @@ export default function Dashboard({ userRole, onNavigate, user }) {
               </tbody>
             </table>
             <div className="table-pagination">
-              {[0, 1, 2].map(i => (
+              {[0, 1, 2].map((i) => (
                 <button
                   key={i}
                   className={`dot-page ${activeDot === i ? 'active' : ''}`}
@@ -333,9 +360,7 @@ export default function Dashboard({ userRole, onNavigate, user }) {
         </div>
       </div>
 
-      {/* ── Side Column ── */}
       <div className="dashboard-side">
-        {/* Quick Actions */}
         <div className="quick-actions">
           <button className="qa-btn primary" onClick={() => onNavigate('patients')}>
             <div className="qa-btn-ico">➕</div>
@@ -347,7 +372,6 @@ export default function Dashboard({ userRole, onNavigate, user }) {
           </button>
         </div>
 
-        {/* Today's Appointments Mini */}
         <div className="today-apt-card">
           <div className="section-header">
             <span className="section-title">Today's Appointments</span>
@@ -372,4 +396,3 @@ export default function Dashboard({ userRole, onNavigate, user }) {
     </div>
   );
 }
-
