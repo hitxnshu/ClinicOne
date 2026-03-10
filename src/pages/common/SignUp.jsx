@@ -178,7 +178,6 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
                 value={formData.role}
                 onChange={e => setFormData({ ...formData, role: e.target.value })}
               >
-                <option value="admin">Admin</option>
                 <option value="doctor">Doctor</option>
                 <option value="receptionist">Receptionist</option>
               </select>

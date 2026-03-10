@@ -165,17 +165,25 @@ export default function Welcome({ onLogin, onSwitchToSignUp }) {
           </form>
 
           <div className="login-demo">
-            Don't have an account?{' '}
-            <strong
-              style={{ cursor: 'pointer', color: 'var(--primary)' }}
-              onClick={onSwitchToSignUp}
-            >
-              Sign Up
-            </strong>
-            <br />
-            <span style={{ fontSize: 11, marginTop: 8, display: 'block', color: 'var(--text-light)' }}>
-              Sign up first to create an account
-            </span>
+            {formData.role === 'admin' ? (
+              <span style={{ fontSize: 11, display: 'block', color: 'var(--text-light)' }}>
+                Admin accounts are managed separately and cannot be created from sign up.
+              </span>
+            ) : (
+              <>
+                Don't have an account?{' '}
+                <strong
+                  style={{ cursor: 'pointer', color: 'var(--primary)' }}
+                  onClick={onSwitchToSignUp}
+                >
+                  Sign Up
+                </strong>
+                <br />
+                <span style={{ fontSize: 11, marginTop: 8, display: 'block', color: 'var(--text-light)' }}>
+                  Sign up first to create an account
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
