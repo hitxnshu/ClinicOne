@@ -8,8 +8,6 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
     password: '',
     confirmPassword: '',
     role: 'receptionist',
-    agreeToTerms: false,
-    newsletterOptIn: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -35,10 +33,6 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
 
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = 'You must agree to the terms';
     }
 
     setErrors(newErrors);
@@ -183,36 +177,11 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
               </select>
             </div>
 
-            <label 
-              className="login-check" 
-              style={{ 
-                marginTop: 4, 
-                cursor: 'pointer',
-                color: errors.agreeToTerms ? 'var(--accent-red)' : 'var(--text-mid)'
-              }}
-            >
-              <input 
-                type="checkbox" 
-                checked={formData.agreeToTerms}
-                onChange={e => setFormData({ ...formData, agreeToTerms: e.target.checked })}
-              />
+            <label className="login-check" style={{ marginTop: 10, cursor: 'pointer', color: 'var(--text-mid)' }}>
+              <input type="checkbox" />
               <span style={{ fontSize: 12 }}>
                 I agree to the <a href="#" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Terms of Service</a> and <a href="#" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Privacy Policy</a>
               </span>
-            </label>
-            {errors.agreeToTerms && (
-              <div style={{ fontSize: 12, color: 'var(--accent-red)', marginTop: 4, marginLeft: 24 }}>
-                {errors.agreeToTerms}
-              </div>
-            )}
-
-            <label className="login-check" style={{ marginTop: 10, cursor: 'pointer', color: 'var(--text-mid)' }}>
-              <input
-                type="checkbox"
-                checked={formData.newsletterOptIn}
-                onChange={e => setFormData({ ...formData, newsletterOptIn: e.target.checked })}
-              />
-              <span style={{ fontSize: 12 }}>Send me clinic updates and health tips (optional)</span>
             </label>
 
             <button type="submit" className="login-submit">
